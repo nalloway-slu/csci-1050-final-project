@@ -7,7 +7,7 @@ function VN_Character (name) {
   this.current_pose = 'default';
 
   this.add_pose = function (key, img) {
-    // add error handling in case img is not p5.Image
+    // TO DO: Add failure case for when `img` is not a p5.Image object
     this.pose[key] = img;
   };
 
@@ -56,15 +56,21 @@ function VN_Scene (name, bg) {
   this.focus = 'NARRATOR'; // Default, as scenes may start with exposition before someone speaks
 
   this.set_background = function (bg) {
+    // TO DO: Add failure case for when `bg` is not a p5.Image object
     this.background = bg;
   };
 
   this.add_character = function (char) {
+    // TO DO: Add failure case for when `char` is not a VN_Character object
     this.characters.push(char);
   };
 
   // In the event you want to override a pre-existing character instead (e.g., the default empty character)
   this.set_character = function (index, char) {
+    // TO DO: Add failure case for when `char` is not a VN_Character object
+    if (index >= this.characters.length) {
+      console.log('ERROR: Attempted to override non-existing character index for scene ' + this.scene_name);
+    }
     this.characters[index] = char;
   }
 
@@ -108,4 +114,5 @@ function VN_Scene (name, bg) {
   // TO DO: Add a method for displaying to the viewer a series of options
   //         -- Then to that, add functionality to store player decisions
   //         -- Decision trees, baby!
+  //        Add a way to suppress characters (if we need to cut away or something)
 }
