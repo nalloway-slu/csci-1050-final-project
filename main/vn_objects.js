@@ -32,7 +32,7 @@ function VN_Character (name) {
 
   this.add_pose = function (key, img) {
     // Guard clause - make sure the input is actually an image
-    if (char.constructor.name != 'p5.Image') {
+    if (img.constructor.name != 'p5.Image') {
       console.log('ERROR: Atttempted to add a pose to character ' + this.name + ' except it wasn\'t of type p5.Image.');
     }
 
