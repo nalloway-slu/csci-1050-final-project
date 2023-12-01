@@ -13,6 +13,15 @@ File directory:
   assets
   | 
 ****************/
+let cool_and_new_scene;
+
+function empty () {
+  return;
+}
+
+function preload() {
+  cool_and_new_scene = new VN_Scene('test', empty);
+}
 
 function setup() {
   createCanvas(400, 400);

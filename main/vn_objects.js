@@ -1,13 +1,41 @@
+/****************
+vn_objects.js - Defines object constructors for characters, scenes that occur in the VN.
+
+Create a character using `new VN_Character(name)`, where `name` is the name of the character.
+The `name` parmater will be used by the VN_Scene object to display in the on-screen namebox.
+The character stores poses, which are key-value pairs consisting of the name of the pose and a p5.Image object
+  containing an image of the character.
+Use add_pose() to add poses to the character, and use set_pose() to change the displayed pose.
+The display() method takes parameters `x` and `y` for the position of the pose on screen and an optional
+  paramter `side` which determines whether to reflect the character pose or not. (If `side == 'RIGHT'`, then
+  we presume the character is to be displayed on the right side of the screen, and hence we reflec them so that
+  they face left.)
+
+Create a scene using `new VN_Scene(name, bg)`, where `name` is the name of the scene, which we use to record
+  error messages using console.log(), and `bg` is a function that draws the background scenery of the scene.
+
+TO DO: Finish rest of documentation!
+****************/
+
 // Define a character constructor for the VN scenes
 function VN_Character (name) {
   this.name = name;
   this.poses = {
-    default: '' // TO DO: replace with global empty image
+    'empty': ''
   };
-  this.current_pose = 'default';
+  this.current_pose = 'empty';
+
+  // Best practices mean that we don't access object properties directly
+  this.get_name = function () {
+    return this.name;
+  };
 
   this.add_pose = function (key, img) {
-    // TO DO: Add failure case for when `img` is not a p5.Image object
+    // Guard clause - make sure the input is actually an image
+    if (char.constructor.name != 'p5.Image') {
+      console.log('ERROR: Atttempted to add a pose to character ' + this.name + ' except it wasn\'t of type p5.Image.');
+    }
+
     this.pose[key] = img;
   };
 
@@ -17,11 +45,17 @@ function VN_Character (name) {
       // Note to self: See if this functionality works or if you're supposed to use the .hasOwn() method instead
       this.current_pose = pose;
     } else {
-      console.log('ERROR: Attempted to set pose of character ' + this.name + ' to a pose that doesn\'t exist.');
+      this.current_pose = 'empty';
+      console.log('WARNING: Attempted to set pose of character ' + this.name + ' to a pose that doesn\'t exist. Setting pose to EMPTY.');
     }
   };
 
   this.display = function (x, y, side='LEFT') {
+    // Guard clause - draw nothing if the pose is empty
+    if (this.current_pose == 'empty') {
+      return;
+    }
+
     push();
     translate(x, y);
     imageMode(CENTER);
@@ -46,44 +80,53 @@ const VN_EMPTY_CHARACTER = new VN_Character('');
 // Define a scene
 function VN_Scene (name, bg) {
   this.scene_name = name; // For debugging purposes, so as to report to console which scene broke
-  this.background = bg;
-  this.characters = [VN_EMPTY_CHARACTER];
+  this.background = bg;   // Pass in a fxn so that we can either have procedurally gen'd bg's or just a static image, at our choosing
+  this.characters = {
+    empty: VN_EMPTY_CHARACTER
+  };
   this.active_characters = {
     // Initialize default characters as the empty character
-    left: this.characters[0],
-    right: this.characters[0]
+    left: this.characters.empty,
+    right: this.characters.empty
   };
-  this.focus = 'NARRATOR'; // Default, as scenes may start with exposition before someone speaks
+  this.characters_visible = false; // Start with characters hidden
+  this.focus = 'NARRATOR';         // Default, as scenes may start with exposition before someone speaks
 
   this.set_background = function (bg) {
-    // TO DO: Add failure case for when `bg` is not a p5.Image object
+    if (typeof bg != 'function') {
+      console.log('ERROR: Attempted to assign a non-function as the background to ' + this.scene);
+    }
     this.background = bg;
   };
 
-  this.add_character = function (char) {
-    // TO DO: Add failure case for when `char` is not a VN_Character object
-    this.characters.push(char);
-  };
-
-  // In the event you want to override a pre-existing character instead (e.g., the default empty character)
-  this.set_character = function (index, char) {
-    // TO DO: Add failure case for when `char` is not a VN_Character object
-    if (index >= this.characters.length) {
-      console.log('ERROR: Attempted to override non-existing character index for scene ' + this.scene_name);
+  this.set_character = function (key, char) {
+    // Guard clause - make sure the input is actually a character
+    if (char.constructor.name != 'VN_Character') {
+      console.log('ERROR: Atttempted to add a character to scene ' + this.scene_name + ' except it wasn\'t actually a character!');
     }
-    this.characters[index] = char;
+
+    // Warn when overriding a pre-existing character
+    if (index in this.characters) {
+      console.log('WARNING: Overriding pre-existing character ' + key + ' in scene ' + this.scene_name);
+    }
+
+    this.characters[key] = char;
   }
 
-  this.set_active_character = function (index, side) {
+  this.set_active_character = function (key, side) {
     if (side == 'LEFT') {
-      this.active_characters.left = this.characters[index];
+      this.active_characters.left = this.characters[key];
     } else if (side == 'RIGHT') {
-      this.active_characters.right = this.characters[index];
+      this.active_characters.right = this.characters[key];
     } else {
       // Failure case
       console.log('ERROR: Attempted to assign a character to non-existing side of scene ' + this.scene_name);
     }
   };
+
+  this.toggle_character_visibility = function () {
+    this.characters_visible = !this.characters_visible;
+  }
 
   this.set_focus = function (side) {
     if (side == 'LEFT') {
@@ -114,5 +157,5 @@ function VN_Scene (name, bg) {
   // TO DO: Add a method for displaying to the viewer a series of options
   //         -- Then to that, add functionality to store player decisions
   //         -- Decision trees, baby!
-  //        Add a way to suppress characters (if we need to cut away or something)
+  //        Add audio functionality
 }
