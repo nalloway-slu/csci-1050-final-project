@@ -13,20 +13,23 @@ File directory:
   assets
   | 
 ****************/
-let cool_and_new_scene;
+let can_char, can_scene;
 
 function empty () {
   return;
 }
 
 function preload() {
-  cool_and_new_scene = new VN_Scene('test', empty);
+  can_char = new VN_Character('testee');
+  can_scene = new VN_Scene('test', empty);
 }
 
 function setup() {
   createCanvas(400, 400);
+  can_scene.add_character(can_char);
 }
 
 function draw() {
   background('CYAN');
+  can_scene.display();
 }

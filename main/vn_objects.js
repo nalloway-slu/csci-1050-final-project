@@ -50,7 +50,7 @@ function VN_Character (name) {
     }
   };
 
-  this.display = function (x, y, side='LEFT') {
+  this.display = function (x, y, side) {
     // Guard clause - draw nothing if the pose is empty
     if (this.current_pose == 'empty') {
       return;
@@ -89,8 +89,8 @@ function VN_Scene (name, bg) {
     left: this.characters.empty,
     right: this.characters.empty
   };
-  this.characters_visible = false; // Start with characters hidden
-  this.focus = 'NARRATOR';         // Default, as scenes may start with exposition before someone speaks
+  this.characters_visible = false; // Presume scene starts with exposition before someone speaks
+  this.speaker = 'NARRATOR';       
 
   this.set_background = function (bg) {
     if (typeof bg != 'function') {
@@ -99,17 +99,18 @@ function VN_Scene (name, bg) {
     this.background = bg;
   };
 
-  this.set_character = function (key, char) {
+  this.add_character = function (char) {
     // Guard clause - make sure the input is actually a character
     if (char.constructor.name != 'VN_Character') {
       console.log('ERROR: Atttempted to add a character to scene ' + this.scene_name + ' except it wasn\'t actually a character!');
+      return;
     }
 
-    // Warn when overriding a pre-existing character
-    if (index in this.characters) {
-      console.log('WARNING: Overriding pre-existing character ' + key + ' in scene ' + this.scene_name);
+    let key = char.get_name();
+    // Warn when character name conflict occurs
+    if (key in this.characters) {
+      console.log('WARNING: Character name conflict for name ' + key + ' in scene ' + this.scene_name + '. Overriding pre-existing character.');
     }
-
     this.characters[key] = char;
   }
 
@@ -128,17 +129,13 @@ function VN_Scene (name, bg) {
     this.characters_visible = !this.characters_visible;
   }
 
-  this.set_focus = function (side) {
-    if (side == 'LEFT') {
-      this.focus = 'RIGHT';
-    } else if (side == 'RIGHT') {
-      this.focus = 'LEFT';
-    } else if (side == 'NARRATOR') {
-      this.focus = 'NARRATOR';
+  this.set_speaker = function (side) {
+    if (side == 'LEFT' || side == 'RIGHT' || side == 'NARRATOR') {
+      this.speaker = side;
     } else {
       // Default case
-      this.focus = 'NONE';
-      console.log('WARNING: Focus of scene ' + this.scene_name + ' set to NONE.');
+      this.speaker = 'NONE';
+      console.log('WARNING: Speaker of scene ' + this.scene_name + ' set to NONE.');
     }
   };
 
@@ -146,10 +143,23 @@ function VN_Scene (name, bg) {
     push();
 
     // draw background image
-    // draw any active characters
-    // draw the appropriate text
-      // fetch name of the focused character
-      // draw name in name box on the correct side of the screen
+    this.background();
+
+    // draw the characters
+    const x = 0; // TO DO: Replace with actual values
+    const y = 0;
+    this.active_characters.left.display(x, y, 'LEFT');
+    this.active_characters.right.display(x, y, 'RIGHT');
+
+    // draw the textbox
+    //  -- you will need to work out some of the values....
+
+    // draw the namebox
+    if (this.speaker == 'LEFT') {
+      // do the thing
+    } else if (this.speaker == 'RIGHT') {
+      // do the other thing
+    }
     
     pop();
   };
@@ -158,4 +168,5 @@ function VN_Scene (name, bg) {
   //         -- Then to that, add functionality to store player decisions
   //         -- Decision trees, baby!
   //        Add audio functionality
+  //        Add a way of distinguish text by speaking vs thinking vs onomatopoeia
 }
