@@ -100,8 +100,11 @@ function VN_Scene (name, x, y, w, h, bg) {
     right: this.characters.empty
   };
   this.speaker = 'NARRATOR';       // Can be either 'LEFT', 'RIGHT', 'NARRATOR', or 'NONE'
-  this.characters_visible = false; //   Presume scene starts with exposition before someone speaks - hence this and the previous line
-  this.dialogue = '';              // text to display to screen
+  this.characters_visible = false; // Presume scene starts with exposition before someone speaks - hence this and the previous line
+
+  // Properties for dialogue displayed to screen
+  this.dialogue = '';
+  this.dg_char_counter = 0; // We will display characters of the dialogue one at a time, so let's track when we're finished doing that.
 
   // Begin methods
   this.set_background = function (bg) {
@@ -147,27 +150,44 @@ function VN_Scene (name, x, y, w, h, bg) {
     }
   };
 
-  // For when you want to hide characters as you're showing a cutaway, etc.
-  this.toggle_character_visibility = function () {
-    this.characters_visible = !this.characters_visible;
+  // A pair of function for when you want to hide characters during a cutaway or return them thereafter
+  this.show_characters = function () {
+    this.characters_visible = true;
   };
 
+  this.hide_characters = function () {
+    this.characters_visible = false;
+  };
+
+  // Set the text in the textbox
   this.set_dialogue = function (msg) {
     this.dialogue = msg;
+    this.dg_char_counter = msg.length;
+  };
+
+  // Output whether or not the dialogue is finished being typed to screen
+  //   so that external control knows when we're ready to continue.
+  this.dialogue_not_finished = function () {
+    if (this.dg_char_counter == 0) {
+      return false;
+    } else {
+      return true;
+    }
   };
   
-  // resets all the active speakers and dialogue and stuff to the defaults.
+  // Resets all the active speakers and dialogue and stuff to the defaults.
   this.clear_all = function () {
     this.set_speaker('NARRATOR');
     this.set_active_speaker('empty', 'LEFT');
     this.set_active_speaker('empty', 'RIGHT');
     this.set_dialogue('');
-    this.characters_visible = false;
+    this.hide_characters();
   };
 
   // Draws scene with top-left corner (x,y) and bottom-right corner (x+w,y+h).
   // Characters are drawn at center line, dividing the screen into thirds.
   // Textbox covers lower third.
+  //  -- TO DO: Change this covering so that it scales with canvas size.
   this.display = function () {
     push();
     translate(this.x, this.y);
@@ -176,30 +196,46 @@ function VN_Scene (name, x, y, w, h, bg) {
     this.background(); // TO DO: See about adding functionality for passing in optional args for this fxn
 
     // draw the characters
-    this.active_speakers.left.display(this.width/3, this.height/2, 'LEFT'); // space characters at thirds
-    this.active_speakers.right.display(2/3 * this.width, this.height/2, 'RIGHT');
+    if (this.characters_visible) {
+      this.active_speakers.left.display(this.width/3, this.height/2, 'LEFT'); // space characters at thirds
+      this.active_speakers.right.display(2/3 * this.width, this.height/2, 'RIGHT');
+    }
 
     // draw the textbox
-    fill(255, 255, 255, 200);
+    fill(235);
+    // TO CONSIDER: Use opacity instead of off-white
+    // fill(255, 255, 255, 220);
     stroke(255);
-    strokeWeight(3);
+    strokeWeight(4);
     rect(0, 2/3 * this.height, this.width, this.height/3);
 
     fill(0);
     noStroke();
     textSize(14);
 
+    // Display text characters of the dialogue incrementally
+    let dg_text;
+    // Decrease the dialogue-output-counter every frame that we call the .display() method
+    if (this.dg_char_counter > 0) {
+      this.dg_char_counter--;
+    }
+    // Display one additional character each time .display() is called
+    dg_text = this.dialogue.substring(0, this.dialogue.length - this.dg_char_counter);
+
+    // TO DO: Implement a custom text-scroll speed
+    //         -- Right now text-scoll is tied to sketch framerate
+
     // draw text and namebox if applicable
     // TO DO(?): Store padding so that you don't have a hard-coded value
     let padding = 10;
     if (this.speaker == 'NARRATOR') {
       textStyle(ITALIC);
-      text(this.dialogue, padding, 2/3 * this.height + 2 * padding, this.width - 2 * padding);
+      text(dg_text, padding, 2/3 * this.height + 2 * padding, this.width - 2 * padding);
     }
     else if (this.speaker == 'LEFT')
     {
       // draw text of left side of screen
-      text(this.dialogue, padding, 2/3 * this.height + 2 * padding, 2/3 * this.width - 2 * padding);
+      text(dg_text, padding, 2/3 * this.height + 2 * padding, 2/3 * this.width - 2 * padding);
 
       // draw the namebox
       fill(60, 210, 255);
@@ -216,7 +252,8 @@ function VN_Scene (name, x, y, w, h, bg) {
     {
       // draw text on right side of screen
       textAlign(RIGHT);
-      text(this.dialogue, 1/3 * this.width + padding, 2 * this.height/3 + 2 * padding, 2/3 * this.width - 2 * padding);
+      text(dg_text, 1/3 * this.width + padding, 2 * this.height/3 + 2 * padding, 2/3 * this.width - 2 * padding);
+      // TO CONSIDER: Maybe don't RIGHT align this? The text blipping doesn't look as smooth when drawing from the right
 
       fill(255, 210, 60);   // TO DO: Add custom color functionality by assigning color to VN_Character
       stroke(250, 185, 35);
@@ -238,4 +275,6 @@ function VN_Scene (name, x, y, w, h, bg) {
   //        Add audio functionality
   //        Add a way of distinguish text by speaking vs thinking vs onomatopoeia
   //        Figure out how to hook in ways to control the back-background behind the VN_Scene -- maybe put in the parser as a separate component?
+  //        Perhaps refactor the whole speaker thing into a L-R vs. face-viewer mode
+  //        Have a way to output prior dialog to a history box somewhere?
 }
