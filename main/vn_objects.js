@@ -177,49 +177,56 @@ function VN_Scene (name, x, y, w, h, bg) {
 
     // draw the characters
     this.active_speakers.left.display(this.width/3, this.height/2, 'LEFT'); // space characters at thirds
-    this.active_speakers.right.display(2 * this.width/3, this.height/2, 'RIGHT');
+    this.active_speakers.right.display(2/3 * this.width, this.height/2, 'RIGHT');
 
     // draw the textbox
     fill(255, 255, 255, 200);
     stroke(255);
     strokeWeight(3);
-    rect(0, 2 * this.height/3, this.width, this.height/3);
+    rect(0, 2/3 * this.height, this.width, this.height/3);
 
     fill(0);
     noStroke();
     textSize(14);
+
+    // draw text and namebox if applicable
+    // TO DO(?): Store padding so that you don't have a hard-coded value
+    let padding = 10;
     if (this.speaker == 'NARRATOR') {
       textStyle(ITALIC);
+      text(this.dialogue, padding, 2/3 * this.height + 2 * padding, this.width - 2 * padding);
     }
-    text(this.dialogue, 10, 2 * this.height/3 + 20, this.width - 20); // TO DO(?): Store padding so that you don't have a hard-coded value
-
-    // draw the namebox
-    if (this.speaker == 'LEFT')
+    else if (this.speaker == 'LEFT')
     {
+      // draw text of left side of screen
+      text(this.dialogue, padding, 2/3 * this.height + 2 * padding, 2/3 * this.width - 2 * padding);
+
+      // draw the namebox
       fill(60, 210, 255);
       stroke(35, 185, 250);
       strokeWeight(3);
-      rect(10, 2 * this.height/3 - 10, textWidth(this.active_speakers.left.get_name()) + 20, 20);
+      rect(padding, 2/3 * this.height - padding, textWidth(this.active_speakers.left.get_name()) + 2 * padding, 2 * padding);
 
       fill(0);
       noStroke();
       textAlign(LEFT, CENTER);
-      // TO DO: Shorten width so as to accomodate for VISUAL HARMONY (see below)
-      text(this.active_speakers.left.get_name(), 20, 2 * this.height/3);
+      text(this.active_speakers.left.get_name(), 2 * padding, 2/3 * this.height);
     }
     else if (this.speaker == 'RIGHT')
     {
+      // draw text on right side of screen
+      textAlign(RIGHT);
+      text(this.dialogue, 1/3 * this.width + padding, 2 * this.height/3 + 2 * padding, 2/3 * this.width - 2 * padding);
+
       fill(255, 210, 60);   // TO DO: Add custom color functionality by assigning color to VN_Character
       stroke(250, 185, 35);
       strokeWeight(3);
-      rect(this.width - 10, 2 * this.height/3 - 10, -textWidth(this.active_speakers.right.get_name()) - 20, 20);
+      rect(this.width - padding, 2/3 * this.height - padding, -textWidth(this.active_speakers.right.get_name()) - 2 * padding, 2 * padding);
 
       fill(0);
       noStroke();
       textAlign(RIGHT, CENTER);
-      // TO DO: Position text on right hand side for VISUAL HARMONY
-      // TO DO: Find the term that 2am me actually wanted to say in the above
-      text(this.active_speakers.right.get_name(), this.width - 20, 2 * this.height/3);
+      text(this.active_speakers.right.get_name(), this.width - 2 * padding, 2/3 * this.height);
     }
 
     pop();
@@ -230,4 +237,5 @@ function VN_Scene (name, x, y, w, h, bg) {
   //         -- Decision trees, baby!
   //        Add audio functionality
   //        Add a way of distinguish text by speaking vs thinking vs onomatopoeia
+  //        Figure out how to hook in ways to control the back-background behind the VN_Scene -- maybe put in the parser as a separate component?
 }
