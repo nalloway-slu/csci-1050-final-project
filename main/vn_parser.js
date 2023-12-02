@@ -16,3 +16,12 @@ TO DO: Finish rest of documentation!
 //  -- pass in any other custom effects
 //      -- looking up online says DON'T USE eval(), so maybe don't use eval()
 
+function VN_Parser (input) {
+  // TO DO: Make sure input is an array of strings
+  this.counter = 0;
+
+  this.parse_line = function () {
+
+  };
+}
+

@@ -57,14 +57,19 @@ function mousePressed() {
       can_scene.set_active_speaker('testee 2', 'RIGHT');
       can_scene.set_speaker('LEFT');
       can_scene.show_characters();
+
+      can_char.set_pose('1');
+      can_char2.set_pose('1');
+
       can_scene.set_dialogue('help me');
       break;
     case 1:
       can_scene.set_speaker('RIGHT');
+      can_char.set_pose('2');
+      can_char2.set_pose('2');
       can_scene.set_dialogue('Have you considered helping yourself here? Huh? Have you?');
       break;
     case 2:
-      can_scene.hide_characters();
       can_scene.set_speaker('NARRATOR');
       can_scene.set_dialogue('oh no.... how rude....');
       break;

@@ -12,7 +12,7 @@ The display() method takes parameters `x` and `y` for the position of the pose o
   they face left.)
 
 Create a scene using `new VN_Scene(name, bg)`, where `name` is the name of the scene, which we use to record
-  error messages using console.log(), and `bg` is a function that draws the background scenery of the scene.
+  error messages using console.error(), and `bg` is a function that draws the background scenery of the scene.
 
 TO DO: Finish rest of documentation!
 ****************/
@@ -31,16 +31,20 @@ function VN_Character (name) {
   };
 
   this.add_pose = function (key, img) {
-    // Guard clause - make sure the input is actually an image
-    if (img.constructor.name != 'p5.Image') {
-      console.log('ERROR: Atttempted to add a pose to character ' + this.name + ' except it wasn\'t of type p5.Image.');
-    }
+    // TO DO: Fix guard clause functionality
 
-    this.pose[key] = img;
+    // // Guard clause - make sure the input is actually an image
+    // if (img.constructor.name != 'p5.Image') {
+    //   console.error('ERROR: Atttempted to add a pose to character ' + this.name + ' except it wasn\'t of type p5.Image.');
+    // }
+
+    this.poses[key] = img;
   };
 
   // We take advantage of JS's shallow copying by writing in pose-change functionality at the level of characters rather than
   // the scenes themselves.
+
+  // TO DO: Okay actually make sure this works.
   this.set_pose = function (pose) {
     // Check first to see if the request pose actually exists in the character's list of poses
     if (pose in this.poses) {
@@ -48,7 +52,7 @@ function VN_Character (name) {
       this.current_pose = pose;
     } else {
       this.current_pose = 'empty';
-      console.log('WARNING: Attempted to set pose of character ' + this.name + ' to a pose that doesn\'t exist. Setting pose to EMPTY.');
+      console.warn('WARNING: Attempted to set pose of character ' + this.name + ' to a pose that doesn\'t exist. Setting pose to EMPTY.');
     }
   };
 
@@ -66,11 +70,11 @@ function VN_Character (name) {
     if (side == 'RIGHT') {
       scale(-1, 1);
     } else if (side != 'LEFT') {
-      console.log('ERROR: Attempted to draw character ' + this.name + ' on non-existing side of screen.');
+      console.error('ERROR: Attempted to draw character ' + this.name + ' on non-existing side of screen.');
     }
 
     // Draw the current pose at the trans'd origin
-    image(this.pose[this.current_pose], 0, 0);
+    image(this.poses[this.current_pose], 0, 0);
 
     pop();
   };
@@ -109,7 +113,7 @@ function VN_Scene (name, x, y, w, h, bg) {
   // Begin methods
   this.set_background = function (bg) {
     if (typeof bg != 'function') {
-      console.log('ERROR: Attempted to assign a non-function as the background to ' + this.scene);
+      console.error('ERROR: Attempted to assign a non-function as the background to ' + this.scene);
     }
     this.background = bg;
   };
@@ -117,14 +121,14 @@ function VN_Scene (name, x, y, w, h, bg) {
   this.add_character = function (char) {
     // Guard clause - make sure the input is actually a character
     if (char.constructor.name != 'VN_Character') {
-      console.log('ERROR: Atttempted to add a character to scene ' + this.scene_name + ' except it wasn\'t actually of type VN_Character.');
+      console.error('ERROR: Atttempted to add a character to scene ' + this.scene_name + ' except it wasn\'t actually of type VN_Character.');
       return;
     }
 
     let key = char.get_name();
     // Warn when character name conflict occurs
     if (key in this.characters) {
-      console.log('WARNING: Character name conflict for name ' + key + ' in scene ' + this.scene_name + '. Overriding pre-existing character.');
+      console.warn('WARNING: Character name conflict for name ' + key + ' in scene ' + this.scene_name + '. Overriding pre-existing character.');
     }
     this.characters[key] = char;
   };
@@ -135,7 +139,7 @@ function VN_Scene (name, x, y, w, h, bg) {
     } else {
       // Default case
       this.speaker = 'NONE';
-      console.log('WARNING: Speaker of scene ' + this.scene_name + ' set to NONE.');
+      console.warn('WARNING: Speaker of scene ' + this.scene_name + ' set to NONE.');
     }
   };
 
@@ -146,7 +150,7 @@ function VN_Scene (name, x, y, w, h, bg) {
       this.active_speakers.right = this.characters[key];
     } else {
       // Failure case
-      console.log('ERROR: Attempted to assign a character to non-existing side of scene ' + this.scene_name);
+      console.error('ERROR: Attempted to assign a character to non-existing side of scene ' + this.scene_name);
     }
   };
 
