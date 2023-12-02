@@ -108,7 +108,7 @@ function VN_Scene (name, x, y, w, h, bg) {
 
   // Properties for dialogue displayed to screen
   this.dialogue = '';
-  this.dg_char_counter = 0; // We will display characters of the dialogue one at a time, so let's track when we're finished doing that.
+  this.dg_char_counter = 0; // We will display dialogue one character at a time, so let's track when we're in the middle of vs. finished doing that.
 
   // Begin methods
   this.set_background = function (bg) {
