@@ -333,7 +333,7 @@ function VN_Scene (name, x, y, w, h, p, tb_h, bg) {
     dg_text = this.dialogue.substring(0, this.dialogue.length - this.dg_char_counter);
 
     // Draw text and namebox if applicable
-    if (this.speaker == 'NARRATOR'){
+    if (this.speaker == 'NARRATOR') {
       textStyle(ITALIC);
       text(dg_text, this.padding, textbox_y + 2 * this.padding, this.width - 2 * this.padding);
     }
