@@ -3,3 +3,7 @@ vn_handler.js - Defines how to interpret text files in `assets` folder containin
 
 TO DO: Finish rest of documentation!
 ****************/
+
+// grab scene file
+// figure out how to do control for it
+// figure out how to read from scene file

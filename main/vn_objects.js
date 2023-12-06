@@ -41,8 +41,6 @@ function VN_Character (name) {
     this.poses[key] = img;
   };
 
-  // We take advantage of JS's shallow copying by writing in pose-change functionality at the level of characters rather than
-  // the scenes themselves.
   this.set_pose = function (pose) {
     // Check first to see if the request pose actually exists in the character's list of poses
     if (pose in this.poses) {
@@ -202,6 +200,10 @@ function VN_Scene (name, x, y, w, h, p, tb_h, bg) {
   this.dg_char_counter = 0; // For tracking how many characters left needed to display to screen
 
   // Begin methods
+  this.get_name = function () {
+    return this.scene_name;
+  };
+
   this.set_background = function (bg) {
     if (typeof bg != 'function') {
       console.error('ERROR: Attempted to assign a non-function as the background to ' + this.scene);
@@ -222,6 +224,11 @@ function VN_Scene (name, x, y, w, h, p, tb_h, bg) {
       console.warn('WARNING: Character name conflict for name ' + key + ' in scene ' + this.scene_name + '. Overriding pre-existing character.');
     }
     this.characters[key] = char;
+  };
+
+  this.set_character_pose = function (char, pose) {
+    let key = char.get_name();
+    this.characters[key].set_pose(pose);
   };
 
   this.set_speaker = function (side) {
@@ -326,7 +333,7 @@ function VN_Scene (name, x, y, w, h, p, tb_h, bg) {
     dg_text = this.dialogue.substring(0, this.dialogue.length - this.dg_char_counter);
 
     // Draw text and namebox if applicable
-    if (this.speaker == 'NARRATOR') {
+    if (this.speaker == 'NARRATOR'){
       textStyle(ITALIC);
       text(dg_text, this.padding, textbox_y + 2 * this.padding, this.width - 2 * this.padding);
     }
