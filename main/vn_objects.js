@@ -81,7 +81,95 @@ function VN_Character (name) {
 // The empty character, for initializing a scene
 const VN_EMPTY_CHARACTER = new VN_Character('');
 
-// Define a scene
+//-------------------------------------------------------------------------------------------------------------------------------------------------
+
+// Define a button constructor for displaying dialogue choices in scenes
+//  -- Upon selecting the button, returns the button value
+function VN_Button (txt, val, x, y, w, h, clr) {
+  // Properties for button text and flag return value
+  this.label = txt;
+  if (val == false) {
+    // Guard clause - The .return_if_interaction() method returns either this.value when the button is clicked, or false otherwise.
+    //  -- Hence, we don't want to be able to assign a value of false to the button.
+    this.value = true;
+    console.warn('WARNING: Attempted to assign value of false to button with label ' + this.label + '. Assigning true instead.');
+  } else {
+    this.value = val;
+  }
+
+  // Properties for position and display
+  this.x = x;
+  this.y = y;
+  this.width = w;
+  this.height = h;
+  this.color = clr;
+
+  this.display = function () {
+    push();
+    translate(this.x, this.y);
+
+    // Body of the button
+    fill(this.color);
+    rectMode(CENTER);
+    rect(0, 0, this.width, this.height);
+
+    // Button text
+    fill(0);
+    textAlign(CENTER, CENTER);
+    text(this.label, 0, 0);
+
+    pop();
+  };
+
+  this.return_interaction = function () {
+    let within_bounds_x = (mouseX >= this.x - this.width/2) && (mouseX <= this.x + this.width/2);
+    let within_bounds_y = (mouseY >= this.y - this.height/2) && (mouseY <= this.y + this.height/2);
+    if (within_bounds_x && within_bounds_y) {
+      return this.value;
+    } else {
+      return false;
+    }
+    // TO DO: Figure out how to have a clicking animation
+  };
+}
+
+// Now define a constructor for collating buttons together
+function VN_Button_Panel (clr = 'CYAN') {
+  this.color = clr;
+  this.buttons = [];
+
+  this.add_button = function (txt, val, x, y, w, h, clr2 = this.color) {
+    this.buttons[val] = new VN_Button(txt, val, x, y, w, h, clr2);
+  };
+
+  this.display = function () {
+    for (let key in this.buttons) {
+      this.buttons[key].display();
+    }
+  };
+
+  this.return_interaction = function () {
+    // We're going to call each button in order to see which button, if any, has been clicked.
+    // Upon calling, each button will either return false if not clicked, or otherwise any other value.
+    // We stop calling once we find a button that returns something other than false.
+    let result = false;
+
+    for (let key in this.buttons) {
+      // We need strict inequality here so that JS doesn't try to coerce a `0` to `false` or something like that.
+      let tmp = this.buttons[key].return_interaction();
+      if (tmp !== false) {
+        result = tmp;
+        break;
+      }
+    }
+
+    return result;
+  };
+}
+
+//-------------------------------------------------------------------------------------------------------------------------------------------------
+
+// Define a scene constructor
 function VN_Scene (name, x, y, w, h, p, tb_h, bg) {
   this.scene_name = name; // For debugging purposes, so as to report to console which scene broke
   this.background = bg;   // Pass in a fxn so that we can either have procedurally gen'd bg's or just a static image, at our choosing
@@ -186,8 +274,8 @@ function VN_Scene (name, x, y, w, h, p, tb_h, bg) {
   // Resets all the active speakers and dialogue and stuff to the defaults.
   this.clear_all = function () {
     this.set_speaker('NARRATOR');
-    this.set_active_speaker('empty', 'LEFT');
-    this.set_active_speaker('empty', 'RIGHT');
+    this.set_active_speaker_slot('empty', 'LEFT');
+    this.set_active_speaker_slot('empty', 'RIGHT');
     this.set_dialogue('');
     this.hide_characters();
   };
