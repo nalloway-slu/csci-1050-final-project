@@ -31,7 +31,7 @@ function VN_Character (name) {
   };
 
   this.add_pose = function (key, img) {
-    // TO DO: Fix guard clause functionality
+    // TO DO(?): Fix guard clause functionality
 
     // // Guard clause - make sure the input is actually an image
     // if (img.constructor.name != 'p5.Image') {
@@ -43,8 +43,6 @@ function VN_Character (name) {
 
   // We take advantage of JS's shallow copying by writing in pose-change functionality at the level of characters rather than
   // the scenes themselves.
-
-  // TO DO: Okay actually make sure this works.
   this.set_pose = function (pose) {
     // Check first to see if the request pose actually exists in the character's list of poses
     if (pose in this.poses) {
@@ -84,15 +82,17 @@ function VN_Character (name) {
 const VN_EMPTY_CHARACTER = new VN_Character('');
 
 // Define a scene
-function VN_Scene (name, x, y, w, h, bg) {
+function VN_Scene (name, x, y, w, h, p, tb_h, bg) {
   this.scene_name = name; // For debugging purposes, so as to report to console which scene broke
   this.background = bg;   // Pass in a fxn so that we can either have procedurally gen'd bg's or just a static image, at our choosing
   
-  // Properties for position of scene on screen
+  // Properties for position of scene on screen, other elements in scene
   this.x = x;
   this.y = y;
   this.width = w;
   this.height = h;
+  this.padding = p;
+  this.textbox_height = tb_h;
   
   // Properties for characters associated to the scene
   this.characters = {
@@ -108,7 +108,8 @@ function VN_Scene (name, x, y, w, h, bg) {
 
   // Properties for dialogue displayed to screen
   this.dialogue = '';
-  this.dg_char_counter = 0; // We will display dialogue one character at a time, so let's track when we're in the middle of vs. finished doing that.
+  this.dg_char_speed = 1;   // Characters to display per frame
+  this.dg_char_counter = 0; // For tracking how many characters left needed to display to screen
 
   // Begin methods
   this.set_background = function (bg) {
@@ -143,7 +144,7 @@ function VN_Scene (name, x, y, w, h, bg) {
     }
   };
 
-  this.set_active_speaker = function (key, side) {
+  this.set_active_speaker_slot = function (key, side) {
     if (side == 'LEFT') {
       this.active_speakers.left = this.characters[key];
     } else if (side == 'RIGHT') {
@@ -163,14 +164,17 @@ function VN_Scene (name, x, y, w, h, bg) {
     this.characters_visible = false;
   };
 
-  // Set the text in the textbox
+  // Methods for handling the textbox
   this.set_dialogue = function (msg) {
     this.dialogue = msg;
     this.dg_char_counter = msg.length;
   };
 
-  // Output whether or not the dialogue is finished being typed to screen
-  //   so that external control knows when we're ready to continue.
+  this.set_char_speed = function (v) {
+    this.dg_char_speed = v;
+  };
+
+  // Output whether or not the dialogue is finished being typed to screen so that external control knows when we're ready to continue.
   this.dialogue_not_finished = function () {
     if (this.dg_char_counter == 0) {
       return false;
@@ -188,30 +192,30 @@ function VN_Scene (name, x, y, w, h, bg) {
     this.hide_characters();
   };
 
-  // Draws scene with top-left corner (x,y) and bottom-right corner (x+w,y+h).
-  // Characters are drawn at center line, dividing the screen into thirds.
-  // Textbox covers lower third.
-  //  -- TO DO: Change this covering so that it scales with canvas size.
+  // Draw the scene!!
+  //  -- Characters are drawn at center line, dividing the screen into thirds.
   this.display = function () {
     push();
     translate(this.x, this.y);
 
-    // draw background image
+    // Draw background image
     this.background(); // TO DO: See about adding functionality for passing in optional args for this fxn
 
-    // draw the characters
+    // Draw the characters
     if (this.characters_visible) {
       this.active_speakers.left.display(this.width/3, this.height/2, 'LEFT'); // space characters at thirds
       this.active_speakers.right.display(2/3 * this.width, this.height/2, 'RIGHT');
     }
 
-    // draw the textbox
+    // Draw the textbox
     fill(235);
     // TO CONSIDER: Use opacity instead of off-white
     // fill(255, 255, 255, 220);
     stroke(255);
     strokeWeight(4);
-    rect(0, 2/3 * this.height, this.width, this.height/3);
+
+    let textbox_y = this.height - this.textbox_height;
+    rect(0, textbox_y, this.width, this.height/3);
 
     fill(0);
     noStroke();
@@ -221,53 +225,53 @@ function VN_Scene (name, x, y, w, h, bg) {
     let dg_text;
     // Decrease the dialogue-output-counter every frame that we call the .display() method
     if (this.dg_char_counter > 0) {
-      this.dg_char_counter--;
+      this.dg_char_counter -= this.dg_char_speed;
+
+      // In case we go below zero...
+      if (this.dg_char_counter < 0) {
+        this.dg_char_counter = 0;
+      }
     }
-    // Display one additional character each time .display() is called
+    // Display additional characters each time .display() is called
     dg_text = this.dialogue.substring(0, this.dialogue.length - this.dg_char_counter);
 
-    // TO DO: Implement a custom text-scroll speed
-    //         -- Right now text-scoll is tied to sketch framerate
-
-    // draw text and namebox if applicable
-    // TO DO(?): Store padding so that you don't have a hard-coded value
-    let padding = 10;
+    // Draw text and namebox if applicable
     if (this.speaker == 'NARRATOR') {
       textStyle(ITALIC);
-      text(dg_text, padding, 2/3 * this.height + 2 * padding, this.width - 2 * padding);
+      text(dg_text, this.padding, textbox_y + 2 * this.padding, this.width - 2 * this.padding);
     }
     else if (this.speaker == 'LEFT')
     {
-      // draw text of left side of screen
-      text(dg_text, padding, 2/3 * this.height + 2 * padding, 2/3 * this.width - 2 * padding);
+      // Draw text on left side of screen
+      text(dg_text, this.padding, textbox_y + 2 * this.padding, 2/3 * this.width - 2 * this.padding);
 
-      // draw the namebox
+      // Draw the namebox
       fill(60, 210, 255);
       stroke(35, 185, 250);
       strokeWeight(3);
-      rect(padding, 2/3 * this.height - padding, textWidth(this.active_speakers.left.get_name()) + 2 * padding, 2 * padding);
+      rect(this.padding, textbox_y - this.padding, textWidth(this.active_speakers.left.get_name()) + 2 * this.padding, 2 * this.padding);
 
       fill(0);
       noStroke();
       textAlign(LEFT, CENTER);
-      text(this.active_speakers.left.get_name(), 2 * padding, 2/3 * this.height);
+      text(this.active_speakers.left.get_name(), 2 * this.padding, 2/3 * this.height);
     }
     else if (this.speaker == 'RIGHT')
     {
-      // draw text on right side of screen
+      // Draw text on right side of screen
       textAlign(RIGHT);
-      text(dg_text, 1/3 * this.width + padding, 2 * this.height/3 + 2 * padding, 2/3 * this.width - 2 * padding);
-      // TO CONSIDER: Maybe don't RIGHT align this? The text blipping doesn't look as smooth when drawing from the right
+      text(dg_text, 1/3 * this.width + this.padding, textbox_y + 2 * this.padding, 2/3 * this.width - 2 * this.padding);
 
+      // Draw the namebox
       fill(255, 210, 60);   // TO DO: Add custom color functionality by assigning color to VN_Character
       stroke(250, 185, 35);
       strokeWeight(3);
-      rect(this.width - padding, 2/3 * this.height - padding, -textWidth(this.active_speakers.right.get_name()) - 2 * padding, 2 * padding);
+      rect(this.width - this.padding, textbox_y - this.padding, -textWidth(this.active_speakers.right.get_name()) - 2 * this.padding, 2 * this.padding);
 
       fill(0);
       noStroke();
       textAlign(RIGHT, CENTER);
-      text(this.active_speakers.right.get_name(), this.width - 2 * padding, 2/3 * this.height);
+      text(this.active_speakers.right.get_name(), this.width - 2 * this.padding, 2/3 * this.height);
     }
 
     pop();

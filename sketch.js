@@ -23,14 +23,15 @@ function bg_incr_gray () {
 function preload() {
   can_char = new VN_Character('testee');
   can_char2 = new VN_Character('testee 2');
-  can_scene = new VN_Scene('test', 2, 2, 596, 596, bg_incr_gray);
+  can_scene = new VN_Scene('test', 2, 2, 596, 596, 10, 596/3, bg_incr_gray); // TO DO: Explain params, this looks a bit opaque
 }
 
 function setup() {
   createCanvas(600, 600); // TO DO: Figure out how to center on page
-  frameRate(48);
+  // frameRate(48);
   can_scene.add_character(can_char);
   can_scene.add_character(can_char2);
+  can_scene.set_char_speed(1);
 }
 
 function draw() {
@@ -53,8 +54,8 @@ function mousePressed() {
 
   switch (counter) {
     case 0:
-      can_scene.set_active_speaker('testee', 'LEFT');
-      can_scene.set_active_speaker('testee 2', 'RIGHT');
+      can_scene.set_active_speaker_slot('testee', 'LEFT');
+      can_scene.set_active_speaker_slot('testee 2', 'RIGHT');
       can_scene.set_speaker('LEFT');
       can_scene.show_characters();
 
