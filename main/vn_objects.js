@@ -110,11 +110,13 @@ function VN_Button (txt, val, x, y, w, h, clr) {
 
     // Body of the button
     fill(this.color);
+    noStroke();
     rectMode(CENTER);
     rect(0, 0, this.width, this.height);
 
     // Button text
     fill(0);
+    stroke(0);
     textAlign(CENTER, CENTER);
     text(this.label, 0, 0);
 
@@ -365,9 +367,7 @@ function VN_Scene (name, x, y, w, h, p, tb_h, bg) {
     pop();
   };
 
-  // TO DO: Add a method for displaying to the viewer a series of options
-  //         -- Then to that, add functionality to store player decisions
-  //         -- Decision trees, baby!
+  // TO DO: Figure out if i should assign button panels to scenes or if they should be independent
   //        Add audio functionality
   //        Add a way of distinguish text by speaking vs thinking vs onomatopoeia
   //        Figure out how to hook in ways to control the back-background behind the VN_Scene -- maybe put in the parser as a separate component?
