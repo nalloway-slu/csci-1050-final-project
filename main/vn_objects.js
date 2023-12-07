@@ -133,7 +133,7 @@ function VN_Button (txt, val, x, y, w, h, clr) {
   };
 }
 
-// Now define a constructor for collating buttons together
+// Then define a constructor for physically collating buttons together
 function VN_Button_Panel (clr = 'CYAN') {
   this.color = clr;
   this.buttons = [];
@@ -231,6 +231,7 @@ function VN_Scene (name, x, y, w, h, p, tb_h, bg) {
     this.characters[key].set_pose(pose);
   };
 
+  // Designate if the character on the LEFT, the character on the RIGHT, or the NARRATOR is going to speak
   this.set_speaker = function (side) {
     if (side == 'LEFT' || side == 'RIGHT' || side == 'NARRATOR') {
       this.speaker = side;
@@ -241,6 +242,7 @@ function VN_Scene (name, x, y, w, h, p, tb_h, bg) {
     }
   };
 
+  // Assign a character from this.characters to either the LEFT or RIGHT side of the screen
   this.set_active_speaker_slot = function (key, side) {
     if (side == 'LEFT') {
       this.active_speakers.left = this.characters[key];
@@ -271,7 +273,7 @@ function VN_Scene (name, x, y, w, h, p, tb_h, bg) {
     this.dg_char_speed = v;
   };
 
-  // Output whether or not the dialogue is finished being typed to screen so that external control knows when we're ready to continue.
+  // Output whether or not the dialogue is finished being typed to screen so that the handler knows when we're ready to continue.
   this.dialogue_not_finished = function () {
     if (this.dg_char_counter == 0) {
       return false;
