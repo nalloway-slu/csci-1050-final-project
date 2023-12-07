@@ -128,7 +128,8 @@ function VN_Button (txt, val, x, y, w, h, clr) {
     } else {
       return false;
     }
-    // TO DO: Figure out how to have a clicking animation
+    // TO CONSIDER: Figure out how to have a clicking animation
+    // TO DO: Make buttons two-tone to be consistent with rest of UI
   };
 }
 
