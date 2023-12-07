@@ -12,13 +12,14 @@ File directory:
   sketch.js       - Main script file, loads all the assets and calls all the requisite functions [TO DO: Revise]
   main
   | vn_objects.js - Defines object constructors for characters, scenes that occur in the VN
-  | vn_parser.js  - Defines how to interpret text files in `assets` folder containing VN scene dialogs and instructions
   | vn_handler.js - Handles scene and parsing control along with user interaction
   assets
   | 
 ****************/
 let can_char, can_char2, can_scene;
 let counter = 0;
+
+const WIDTH = 600, HEIGHT = 600;
 
 function bg_incr_gray () {
   background(counter * 255/6 + 255/12);
