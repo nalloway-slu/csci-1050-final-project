@@ -59,12 +59,18 @@ function VN_Parser (scene, instructions) {
                                     // TO DO: Determine if it'd be better to have the parser as a VN_Scene method
 
   // This method executes line number `index` from `this.instructions` and returns (to the handler) the type of instruction performed, except
-  // in two cases: If the method executes an `if` instruction, then it returns the value of the next index (for the handler) to look at. If
-  // instead the method fails to execute for some reason, it returns 'error'.
+  // in three cases: If the method executes an `if` instruction, then it returns the value of the next index (for the handler) to look at. If
+  // instead the method fails to execute for some reason, it returns 'error'. Lastly, if the line is just empty, then we do nothing and return
+  // 'empty'.
   this.execute_line = function (index) {
     let line = this.instructions[index];
     // Get rid of leading/ending whitespace if there be any
     line = line.trim();
+
+    // Immediately return if the line is the empty string
+    if (line == '') {
+      return 'empty';
+    }
 
     // Determine if line is a single word, and if not, extract the first word only
     let first_space = line.indexOf(' ');

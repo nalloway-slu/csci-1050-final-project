@@ -114,7 +114,6 @@ function VN_Button (txt, val, x, y, w, h, clr) {
 
     // Button text
     fill(0);
-    stroke(0);
     textAlign(CENTER, CENTER);
     text(this.label, 0, 0);
 
@@ -170,9 +169,9 @@ function VN_Button_Panel (clr = 'CYAN') {
 //-------------------------------------------------------------------------------------------------------------------------------------------------
 
 // Define a scene constructor
-function VN_Scene (name, x, y, w, h, p, tb_h, bg) {
-  this.scene_name = name; // For debugging purposes, so as to report to console which scene broke
-  this.background = bg;   // Pass in a fxn so that we can either have procedurally gen'd bg's or just a static image, at our choosing
+function VN_Scene (name, x, y, w, h, p, tb_h) {
+  this.scene_name = name;     // For debugging purposes, so as to report to console which scene broke
+  this.background = () => {}; // Bg's are fxn's so that we can either have procedurally gen'd bg's or just a static image, at our choosing
   
   // Properties for position of scene on screen, other elements in scene
   this.x = x;
@@ -226,9 +225,12 @@ function VN_Scene (name, x, y, w, h, p, tb_h, bg) {
     this.characters[key] = char;
   };
 
-  this.set_character_pose = function (char, pose) {
-    let key = char.get_name();
-    this.characters[key].set_pose(pose);
+  this.set_character_pose = function (key, pose) {
+    if (key in this.characters) {
+      this.characters[key].set_pose(pose);
+    } else {
+      console.error('ERROR: Character ' + key + ' not found for scene ' + this.scene_name);
+    }
   };
 
   // Designate if the character on the LEFT, the character on the RIGHT, or the NARRATOR is going to speak

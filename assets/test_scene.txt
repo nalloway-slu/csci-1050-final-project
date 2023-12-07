@@ -1,0 +1,27 @@
+bg bg_incr_gray
+add testee
+add testee_2
+speed 1
+
+slot testee LEFT
+slot testee_2 RIGHT
+speaker LEFT
+show
+
+pose testee 1
+pose testee_2 1
+
+say help me
+
+speaker RIGHT
+pose testee 2
+pose testee_2 2
+
+say Have you considered helping yourself here? Huh? Have you?
+
+speaker NARRATOR
+say oh no.... how rude....
+
+say what should they do?
+
+clear

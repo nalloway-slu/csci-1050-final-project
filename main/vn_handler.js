@@ -9,19 +9,19 @@ let VN_List_Of_Characters = [];
 let VN_List_Of_Flags = [];
 let VN_List_Of_Scenes = [];
 
-function add_vn_background_to_list () {
+function add_vn_background_to_list (bg) {
+  VN_List_Of_Backgrounds[bg.name] = bg;
+}
+
+function add_vn_character_to_list (char) {
+  VN_List_Of_Characters[char.get_name()] = char;
+}
+
+function add_vn_flag_to_list (flag) {
 
 }
 
-function add_vn_character_to_list () {
-
-}
-
-function add_vn_flag_to_list () {
-
-}
-
-function add_vn_scene_to_list () {
+function add_vn_scene_to_list (scene) {
 
 }
 
