@@ -133,9 +133,14 @@ function VN_Button (txt, val, x, y, w, h, clr) {
 }
 
 // Then define a constructor for physically collating buttons together
-function VN_Button_Panel (clr = 'CYAN') {
+function VN_Button_Panel (name, clr = 'CYAN') {
+  this.name = name;
   this.color = clr;
   this.buttons = [];
+
+  this.get_name = function () {
+    return this.name;
+  }
 
   this.add_button = function (txt, val, x, y, w, h, clr2 = this.color) {
     this.buttons[val] = new VN_Button(txt, val, x, y, w, h, clr2);

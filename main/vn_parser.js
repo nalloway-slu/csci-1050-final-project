@@ -28,26 +28,22 @@ List of keywords, ordered by appearance in the definition of the VN_Scene constr
    -- Resets scene to default settings, in particular setting the speaker to 'NARRATOR', setting the on-screen characters to the
       global empty character VN_EMPTY_CHARACTER, and toggling the scene to hide characters instead of show
 
-TO DO: Decide if the following needs refactoring into inclusion in the VN_Scene constructor
-
 The following keywords do NOT appear in VN_Scene:
   exec <func>
    -- Executes special function <func> from VN_List_Of_Special_Functions
-  options <flag> <option_sequence>
-    -- TO DO: Write documentation here
+  goto <line>
+   -- Returns line number <line> so that the handler knows to jump there
+  options <flag> <button_panel>
+   -- Returns an object consisting of the key-value pairs `target_flag: <flag>` and `button_panel: VN_List_Of_Button_Panels[<button_panel>]`
   if <flag> <value> goto <line>
-   -- If the value of the variable <flag> is <value>, then return line number <line> so that the handler knows to jump there
+   -- If the value of the variable <flag> is <value>, then returns line number <line> so that the handler knows to jump there
 ****************/
-
-// decide on a language for writing scene files
-//  -- pass in any other custom effects
-//      -- looking up online says DON'T USE eval(), so maybe don't use eval()
 
 // TO DO CONTINUALLY: Update list of keywords as you expand functionality of VN_Scene
 
 // List of valid keywords accepted by the parser, in order of how many parameters they take
 const VN_PARSER_KEYWORDS_ZERO_PARAMS = ['show', 'hide', 'say_nothing', 'clear'];
-const VN_PARSER_KEYWORDS_ONE_PARAMS  = ['bg', 'add', 'speaker', 'say', 'speed', 'exec'];
+const VN_PARSER_KEYWORDS_ONE_PARAMS  = ['bg', 'add', 'speaker', 'say', 'speed', 'exec', 'goto'];
 const VN_PARSER_KEYWORDS_TWO_PARAMS  = ['pose', 'slot', 'options'];
 const VN_PARSER_KEYWORDS_MANY_PARAMS = ['if'];
 
@@ -58,15 +54,17 @@ function VN_Parser (scene, instructions) {
   this.name = scene.get_name();
   this.instructions = instructions; // This assignment is the sole reason why we're making the parser into a kind of object: I don't want
                                     // to have to reinput the list of instructions every time I want to parse a new line -- that sounds
-                                    // computationally expensive.
-
-                                    // TO DO: Determine if it'd be better to have the parser as a VN_Scene method
+                                    // like unnecessary extra work for the computer.
+                                    
+  // Store which line the parser is currently looking at.
+  this.current_index = 0;
 
   // This method executes line number `index` from `this.instructions` and returns (to the handler) the type of instruction performed, except
-  // in three cases: If the method executes an `if` instruction, then it returns the value of the next index (for the handler) to look at. If
-  // instead the method fails to execute for some reason, it returns 'error'. Lastly, if the line is just empty, then we do nothing and return
-  // 'empty'.
-  this.execute_line = function (index) {
+  // for a few cases: If the method executes an `options` command, then it returns an object containing the optioned-on flag and the
+  // passed-in button panel. If the method executes a `goto` or `if` instruction, then it returns the value of the next index (for the handler)
+  // to look at. If instead the method fails to execute for some reason, it returns 'error'. Lastly, if the line is just empty, then we do nothing
+  // and return 'empty'.
+  this.execute_line = function (index = this.current_index) {
     let line = this.instructions[index];
     // Get rid of leading/ending whitespace if there be any
     line = line.trim();
@@ -125,9 +123,11 @@ function VN_Parser (scene, instructions) {
         switch (first_word) {
           // See vn_handler.js for the global variables VN_List_Of_Backgrounds/Characters
           case 'bg':
+            // TO DO: Make sure param is in array
             this.scene.set_background(VN_List_Of_Backgrounds[param]);
             break;
           case 'add':
+            // TO DO: Make sure param is in array
             this.scene.add_character(VN_List_Of_Characters[param]);
             break;
           case 'speaker':
@@ -137,8 +137,16 @@ function VN_Parser (scene, instructions) {
             this.scene.set_char_speed(param);
             break;
           case 'exec':
+            // TO DO: Make sure param is in array
             VN_List_Of_Special_Functions[param]();
             break;
+          case 'goto':
+            // Make sure the parameter that the goto command comes with is actually a valid index
+            if (typeof param == 'number' && param >= 0) {
+              return param;
+            }
+            console.error('ERROR: Attempted to execute goto command at line ' + index + ' of scene ' + this.name + ', but given command does not have valid index');
+            return 'error';
           default:
             // We cover the impossible case as before
             console.error('ERROR: Something has gone horribly wrong in executing line ' + index + ' of scene ' + this.name);
@@ -160,8 +168,11 @@ function VN_Parser (scene, instructions) {
           this.scene.set_active_speaker_slot(param1, param2);
           break;
         case 'options':
-          // TO DO: Implement this!!
-          break;
+          // TO DO: Check to make sure param1 is a flag, param2 is a button panel, &c.
+          return {
+            target_flag: VN_List_Of_Flags[param1],
+            button_panel: VN_List_Of_Button_Panels[param2]
+          };
         default:
           // Yet another impossible case we still have to cover
           console.error('ERROR: Something has gone horribly wrong in executing line ' + index + ' of scene ' + this.name);
@@ -188,7 +199,6 @@ function VN_Parser (scene, instructions) {
           } else {
             return index + 1;
           }
-          break;
         default:
           // Still yet another impossible case.
           console.error('ERROR: Something has gone horribly wrong in executing line ' + index + ' of scene ' + this.name);
@@ -200,9 +210,8 @@ function VN_Parser (scene, instructions) {
       return 'error';
     }
 
-    // If all is successful (and we didn't look at an `if` command), then return the initial keyword to the handler.
+    // If all is successful (and we didn't return earlier), then return the initial keyword to the handler.
     return first_word;
     
   };
 }
-
