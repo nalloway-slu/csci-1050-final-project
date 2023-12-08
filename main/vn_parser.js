@@ -54,16 +54,6 @@ const VN_PARSER_KEYWORDS_ONE_PARAMS  = ['bg', 'add', 'speaker', 'say', 'speed', 
 const VN_PARSER_KEYWORDS_TWO_PARAMS  = ['pose', 'slot', 'options'];
 const VN_PARSER_KEYWORDS_MANY_PARAMS = ['if'];
 
-// TO CONSIDER: Assign this function as a method to VN_Scene.prototype?
-
-// This function executes an instruction and returns the type of instruction performed, except for a few cases: If the
-// function executes an `options` command, then it returns an object containing a VN_Button_Panel object and the name of
-// a flag whose value will be set by the user selecting one of the buttons on the button panel. If the function executes
-// a `goto` instruction, then it returns the value of the next index to look at. Similarly, if the function executes an `if`
-// instruction, then we return either `if` if the if-condition fails, or the value of the next index to look at if the
-// if-condition holds. If function fails to execute for some reason, it returns 'error'. Lastly, if the line is just empty,
-// then we do nothing and return 'empty'.
-
 VN_Scene.prototype.assign_instruction_set = function (instructions) {
   this.instructions = instructions;
   this.inst_length = instructions.length;
@@ -73,13 +63,19 @@ VN_Scene.prototype.get_instructions_length = function () {
   return this.inst_length;
 }
 
+// This method executes an instruction and returns the type of instruction performed, except for a few cases: If the
+// method executes an `options` command, then it returns an object containing a VN_Button_Panel object and the name of
+// a flag whose value will be set by the user selecting one of the buttons on the button panel. If the method executes
+// a `goto` instruction, then it returns the value of the next index to look at. Similarly, if the method executes an `if`
+// instruction, then we return either `if` if the if-condition fails, or the value of the next index to look at if the
+// if-condition holds. If method fails to execute for some reason, it returns 'error'. Lastly, if the instruction is just
+// empty, then we do nothing and return 'empty'.
 VN_Scene.prototype.execute_instruction = function (index) {
   // Guard clause - do nothing if index is out of range of instruction set
   if (index >= this.inst_length) {
     console.error('ERROR: Attempted to execute instruction at line ' + index + ' for scene ' + this.name + ', but index was out of range.');
     return;
   }
-
 
   // Get rid of leading/ending whitespace if there be any
   instruction = this.instructions[index].trim();

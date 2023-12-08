@@ -1,6 +1,8 @@
 /****************
 vn_globals.js - Stores variables used by other VN objects in a shared, global location
 
+TO DO: Rewrite documentation - the parser is no longer a standalone object
+
 Certain objects, such as (importantly) the parser, need to be able to access other objects
 in the VN without necessarily being able to reference said objects by their variable name. Hence, we
 store those objects in key-value arrays here so that they may be referenced from a common

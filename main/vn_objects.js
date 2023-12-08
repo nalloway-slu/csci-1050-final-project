@@ -15,6 +15,7 @@ Create a scene using `new VN_Scene(name, bg)`, where `name` is the name of the s
   error messages using console.error(), and `bg` is a function that draws the background scenery of the scene.
 
 TO DO: Finish rest of documentation!
+TO DO: Write note about parser
 ****************/
 
 // Define a character constructor for the VN scenes
@@ -177,6 +178,7 @@ function VN_Button_Panel (name, clr = 'CYAN') {
 //-------------------------------------------------------------------------------------------------------------------------------------------------
 
 // Define a scene constructor
+//  -- For legibility, properties and methods related to parser functionality are offloaded to file `vn_parser.js`
 function VN_Scene (name, x, y, w, h, p, tb_h) {
   this.name = name;     // For debugging purposes, so as to report to console which scene broke
   this.background = () => {}; // Bg's are fxn's so that we can either have procedurally gen'd bg's or just a static image, at our choosing
