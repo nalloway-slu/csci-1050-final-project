@@ -1,7 +1,13 @@
 /****************
-vn_handler.js - Defines how to interpret text files in `assets` folder containing VN scene dialogs and instructions
+vn_globals.js - Stores variables used by other VN objects in a shared, global location
 
-TO DO: Finish rest of documentation!
+Certain objects, such as (importantly) the parser, need to be able to access other objects
+in the VN without necessarily being able to reference said objects by their variable name. Hence, we
+store those objects in key-value arrays here so that they may be referenced from a common
+access point.
+
+Example of use:
+  
 ****************/
 
 let VN_List_Of_Backgrounds = [];
@@ -9,7 +15,6 @@ let VN_List_Of_Characters = [];
 let VN_List_Of_Flags = [];
 let VN_List_Of_Button_Panels = [];
 let VN_List_Of_Special_Functions = [];
-let VN_List_Of_Scenes = [];
 
 function add_vn_background_to_list (bg) {
   // Guard clause - make sure the input is actually a function
@@ -45,17 +50,3 @@ function add_vn_button_panel_to_list (bp) {
 function add_vn_special_function_to_list (func) {
   VN_List_Of_Special_Functions[func.name] = func;
 }
-
-function add_vn_scene_to_list (scene) {
-
-}
-
-//-------------------------------------------------------------------------------------------------------------------------------------------------
-
-function handler () {
-
-}
-
-// grab scene file
-// figure out how to do control for it
-// figure out how to read from scene file

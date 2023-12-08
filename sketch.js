@@ -13,7 +13,7 @@ File directory:
   main
   | vn_objects.js - Defines object constructors for characters, scenes that occur in the VN
   | vn_parser.js  - Defines how to interpret text files in `assets` folder containing VN scene dialogs and instructions
-  | vn_handler.js - Handles scene and parsing control along with user interaction
+  | vn_globals.js - Stores variables used by other VN objects in a shared, global location
   assets
   | 
 ****************/

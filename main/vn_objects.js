@@ -257,13 +257,18 @@ function VN_Scene (name, x, y, w, h, p, tb_h) {
 
   // Assign a character from this.characters to either the LEFT or RIGHT side of the screen
   this.set_active_speaker_slot = function (key, side) {
-    if (side == 'LEFT') {
-      this.active_speakers.left = this.characters[key];
-    } else if (side == 'RIGHT') {
-      this.active_speakers.right = this.characters[key];
+    // First check to make sure the requested character is actually in the array of characters
+    if (key in this.characters) {
+      // Then make sure the given side is actually a valid side of the scene
+      if (side == 'LEFT') {
+        this.active_speakers.left = this.characters[key];
+      } else if (side == 'RIGHT') {
+        this.active_speakers.right = this.characters[key];
+      } else {
+        console.error('ERROR: Attempted to assign a character to non-existing side of scene ' + this.scene_name);
+      }
     } else {
-      // Failure case
-      console.error('ERROR: Attempted to assign a character to non-existing side of scene ' + this.scene_name);
+      console.error('ERROR: Character ' + key + ' not found for scene ' + this.scene_name);
     }
   };
 
@@ -278,11 +283,22 @@ function VN_Scene (name, x, y, w, h, p, tb_h) {
 
   // Methods for handling the textbox
   this.set_dialogue = function (msg) {
+    if (typeof msg != 'string') {
+      console.error('ERROR: Attempted to assign a non-string as dialogue in scene ' + this.scene_name + '. Assgining the empty string instead.');
+      msg = '';
+    }
     this.dialogue = msg;
     this.dg_char_counter = msg.length;
   };
 
   this.set_char_speed = function (v) {
+    if (typeof v != 'number') {
+      console.error('ERROR: Attempted to assign a non-number as the character scroll speed in ' + this.scene_name + '. Now using speed = 1.');
+      v = 1;
+    } else if (!Number.isFinite(v) || v <= 0) {
+      console.error('ERROR: Attempted to assign NaN/infinite/negative as the character scroll speed in ' + this.scene_name + '. Now using speed = 1.');
+      v = 1;
+    }
     this.dg_char_speed = v;
   };
 

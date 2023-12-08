@@ -1,7 +1,7 @@
 /****************
 vn_parser.js - Defines how to interpret text files in `assets` folder containing VN scene dialogs and instructions
 
-TO DO: Finish rest of documentation!
+To expedite the writing process, we invent a language and write a parser 
 
 List of keywords, ordered by appearance in the definition of the VN_Scene constructor (see vn_objects.js):
   bg <func>
@@ -32,7 +32,7 @@ The following keywords do NOT appear in VN_Scene:
   pause
    -- Does nothing
   #
-   -- Functions identically to the `pause` command but is used to signal comments in the instructions document.
+   -- Functions identically to the `pause` command but is used for writing comments in the instructions document.
   exec <func>
    -- Executes special function <func> from VN_List_Of_Special_Functions
   goto <line>
@@ -59,18 +59,15 @@ function VN_Parser (scene, instructions) {
   // TO DO: Type checking!!
   this.scene = scene;
   this.name = scene.get_name();
-  this.instructions = instructions; // This assignment is the sole reason why we're making the parser into a kind of object: I don't want
+  this.instructions = instructions; // This assignment is the primary reason why we're making the parser into a kind of object: I don't want
                                     // to have to reinput the list of instructions every time I want to parse a new line -- that sounds
                                     // like unnecessary extra work for the computer.
 
-  // Store which line the parser is currently looking at.
-  this.current_index = 0;
-
-  // This method executes line number `index` from `this.instructions` and returns (to the handler) the type of instruction performed, except
+  // This method executes line number `index` from `this.instructions` and returns  the type of instruction performed, except
   // for a few cases: If the method executes an `options` command, then it returns an object containing the optioned-on flag and the
-  // passed-in button panel. If the method executes a `goto` or `if` instruction, then it returns the value of the next index (for the handler)
-  // to look at. If instead the method fails to execute for some reason, it returns 'error'. Lastly, if the line is just empty, then we do nothing
-  // and return 'empty'.
+  // passed-in button panel. If the method executes a `goto` or `if` instruction, then it returns the value of the next index
+  // to look at. If instead the method fails to execute for some reason, it returns 'error'. Lastly, if the line is just empty, then
+  // we do nothing and return 'empty'.
   this.execute_line = function (index = this.current_index) {
     let line = this.instructions[index];
     // Get rid of leading/ending whitespace if there be any
@@ -149,6 +146,7 @@ function VN_Parser (scene, instructions) {
             this.scene.set_speaker(param);
             break;
           case 'speed':
+            param = parseInt(param);
             this.scene.set_char_speed(param);
             break;
           case 'exec':
