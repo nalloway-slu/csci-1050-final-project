@@ -24,40 +24,95 @@ function bg_incr_gray () {
   background(counter * 255/40 + 255/80);
 }
 
+function say_result_of_butts () {
+  let adj;
+  if (VN_List_Of_Flags['butt'] == 1) {
+    adj = 'better';
+  } else {
+    adj = 'poorer';
+  }
+  can_scene.set_dialogue('You picked option ' + VN_List_Of_Flags['butt'] + ' and we were all the ' + adj + ' for it.');
+}
+
 function preload() {
   can_char = new VN_Character('testee');
-  can_char2 = new VN_Character('testee_2');
+  can_char2 = new VN_Character('testee 2');
   can_scene = new VN_Scene('test', 2, 2, 596, 596, 10, 596/3); // TO DO: Explain params, this looks a bit opaque
 
-  can_butts = new VN_Button_Panel('ORANGE');
+  can_butts = new VN_Button_Panel('can_butts', 'ORANGE');
+  can_butts.add_button('do something', 1, 300, 200, 100, 25);
+  can_butts.add_button('do nothing', 2, 300, 250, 100, 25);
 
   lines = loadStrings('assets/test_scene.txt');
-  parser = new VN_Parser(can_scene, lines);
 }
 
 function setup() {
   createCanvas(600, 600);
+
+  lines.splice(0, 0, '');
+  parser = new VN_Parser(can_scene, lines);
+
   add_vn_background_to_list(bg_incr_gray);
   add_vn_character_to_list(can_char);
   add_vn_character_to_list(can_char2);
+  add_vn_button_panel_to_list(can_butts);
+  add_vn_flag_to_list('butt');
+  add_vn_special_function_to_list(say_result_of_butts);
 
   let tmp = '';
-  while (tmp != 'empty') {
+  while (tmp != 'pause') {
     tmp = parser.execute_line(counter);
     counter++;
   }
 }
 
+let opt = '';
+let drawing_options = false;
+let opt_return = false;
+
 function draw() {
   can_scene.display();
+
+  if (drawing_options) {
+    opt.button_panel.display();
+  }
 }
 
 function mousePressed() {
+  if (can_scene.dialogue_not_finished()) {
+    return;
+  }
+
+  if (drawing_options) {
+    opt_return = opt.button_panel.return_interaction();
+    if (opt_return != false) {
+      VN_List_Of_Flags[opt.target_flag] = opt_return;
+      drawing_options = false;
+    } else {
+      return;
+    }
+  }
+
   let tmp = '';
-  while (tmp != 'say') {
+  while (true) {
     tmp = parser.execute_line(counter);
     counter++;
     counter %= lines.length;
+
+    if (typeof tmp == 'object') {
+      if ('target_flag' in tmp) {
+        opt = tmp;
+        drawing_options = true;
+      }
+    }
+
+    if (typeof tmp == 'number') {
+      counter = tmp;
+    }
+
+    if (tmp == 'say' || tmp == 'pause') {
+      break;
+    }
   }
 }
 

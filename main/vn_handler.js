@@ -35,7 +35,7 @@ function add_vn_flag_to_list (flag) {
 
 function add_vn_button_panel_to_list (bp) {
   // Guard clause - make sure the input is actually a button panel
-  if (char.constructor.name != 'VN_Button_Panel') {
+  if (bp.constructor.name != 'VN_Button_Panel') {
     console.error('ERROR: Atttempted to add a button panel to global list of button panels except it wasn\'t actually of type VN_Button_Panel.');
     return;
   }

@@ -2,6 +2,7 @@ bg bg_incr_gray
 add testee
 add testee_2
 speed 1
+pause
 
 slot testee LEFT
 slot testee_2 RIGHT
@@ -22,6 +23,21 @@ say Have you considered helping yourself here? Huh? Have you?
 speaker NARRATOR
 say oh no.... how rude....
 
+options butt can_butts
 say what should they do?
+
+if butt 2 goto 35
+say so you picked option 1, huh?
+
+say how's that treating you so far? you likin' it?
+goto 40
+
+# start of option 2
+say so you picked option 2, huh?
+
+say i think there may have been a better choice here...
+
+exec say_result_of_butts
+pause
 
 clear

@@ -29,6 +29,10 @@ List of keywords, ordered by appearance in the definition of the VN_Scene constr
       global empty character VN_EMPTY_CHARACTER, and toggling the scene to hide characters instead of show
 
 The following keywords do NOT appear in VN_Scene:
+  pause
+   -- Does nothing
+  #
+   -- Functions identically to the `pause` command but is used to signal comments in the instructions document.
   exec <func>
    -- Executes special function <func> from VN_List_Of_Special_Functions
   goto <line>
@@ -37,12 +41,15 @@ The following keywords do NOT appear in VN_Scene:
    -- Returns an object consisting of the key-value pairs `target_flag: <flag>` and `button_panel: VN_List_Of_Button_Panels[<button_panel>]`
   if <flag> <value> goto <line>
    -- If the value of the variable <flag> is <value>, then returns line number <line> so that the handler knows to jump there
+
+Note on the <char> parameter: If the character's name has spaces, replace them with underscores in the instructions
+  document.
 ****************/
 
 // TO DO CONTINUALLY: Update list of keywords as you expand functionality of VN_Scene
 
 // List of valid keywords accepted by the parser, in order of how many parameters they take
-const VN_PARSER_KEYWORDS_ZERO_PARAMS = ['show', 'hide', 'say_nothing', 'clear'];
+const VN_PARSER_KEYWORDS_ZERO_PARAMS = ['show', 'hide', 'say_nothing', 'clear', 'pause', '#'];
 const VN_PARSER_KEYWORDS_ONE_PARAMS  = ['bg', 'add', 'speaker', 'say', 'speed', 'exec', 'goto'];
 const VN_PARSER_KEYWORDS_TWO_PARAMS  = ['pose', 'slot', 'options'];
 const VN_PARSER_KEYWORDS_MANY_PARAMS = ['if'];
@@ -55,7 +62,7 @@ function VN_Parser (scene, instructions) {
   this.instructions = instructions; // This assignment is the sole reason why we're making the parser into a kind of object: I don't want
                                     // to have to reinput the list of instructions every time I want to parse a new line -- that sounds
                                     // like unnecessary extra work for the computer.
-                                    
+
   // Store which line the parser is currently looking at.
   this.current_index = 0;
 
@@ -100,6 +107,10 @@ function VN_Parser (scene, instructions) {
         case 'clear':
           this.scene.clear_all();
           break;
+        case 'pause':
+        case '#':
+          // These commands do nothing
+          break;
         default:
           // This case should be impossible (key word: "should be"!)
           console.error('ERROR: Something has gone horribly wrong in executing line ' + index + ' of scene ' + this.name);
@@ -128,6 +139,10 @@ function VN_Parser (scene, instructions) {
             break;
           case 'add':
             // TO DO: Make sure param is in array
+
+            // Since character names may contain spaces, we're changing any underscores written in the
+            // instructions document into spaces.
+            param = param.replaceAll('_', ' ');
             this.scene.add_character(VN_List_Of_Characters[param]);
             break;
           case 'speaker':
@@ -141,10 +156,15 @@ function VN_Parser (scene, instructions) {
             VN_List_Of_Special_Functions[param]();
             break;
           case 'goto':
+            // Remember that parameters in the instruction file are strings, so we have to convert to number first
+            param = parseInt(param);
+
             // Make sure the parameter that the goto command comes with is actually a valid index
-            if (typeof param == 'number' && param >= 0) {
+            if (param >= 0) {
               return param;
             }
+
+            // Else...
             console.error('ERROR: Attempted to execute goto command at line ' + index + ' of scene ' + this.name + ', but given command does not have valid index');
             return 'error';
           default:
@@ -162,15 +182,21 @@ function VN_Parser (scene, instructions) {
       let param2 = cmd[2];
       switch (first_word) {
         case 'pose':
+          // Since character names may contain spaces, we're changing any underscores written in the
+          // instructions document into spaces.
+          param1 = param1.replaceAll('_', ' ');
           this.scene.set_character_pose(param1, param2);
           break;
         case 'slot':
+          // Since character names may contain spaces, we're changing any underscores written in the
+          // instructions document into spaces.
+          param1 = param1.replaceAll('_', ' ');
           this.scene.set_active_speaker_slot(param1, param2);
           break;
         case 'options':
           // TO DO: Check to make sure param1 is a flag, param2 is a button panel, &c.
           return {
-            target_flag: VN_List_Of_Flags[param1],
+            target_flag: param1,
             button_panel: VN_List_Of_Button_Panels[param2]
           };
         default:
@@ -189,8 +215,8 @@ function VN_Parser (scene, instructions) {
           //     scene instruction files.
           let cmd = line.split(' ', 5);
           let flag = cmd[1];
-          let val = cmd[2];
-          let next_line = cmd[4];
+          let val = parseInt(cmd[2]);       // Remember that parameters in the instruction
+          let next_line = parseInt(cmd[4]); // file are strings, so we have to convert them to numbers.
 
           // Recall that for the `if` instruction, the method returns the value of the next index in the list of instructions
           // that the handler needs to look at.

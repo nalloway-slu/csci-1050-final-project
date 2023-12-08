@@ -44,7 +44,7 @@ function VN_Character (name) {
   this.set_pose = function (pose) {
     // Check first to see if the request pose actually exists in the character's list of poses
     if (pose in this.poses) {
-      // Note to self: See if this functionality works or if you're supposed to use the .hasOwn() method instead
+      // TO DO: See if this functionality works or if you're supposed to use the .hasOwn() method instead
       this.current_pose = pose;
     } else {
       this.current_pose = 'empty';
@@ -86,11 +86,14 @@ const VN_EMPTY_CHARACTER = new VN_Character('');
 function VN_Button (txt, val, x, y, w, h, clr) {
   // Properties for button text and flag return value
   this.label = txt;
+
+  // Guard clause - The .return_interaction() method returns either this.value when the button is clicked, or false otherwise.
+  // Consequently, we don't want to be able to assign a value of false to a button. And since I'll likely forget to use
+  // strict equality/inequality later when I check for the output value of a button, we're gonna use non-strict equality
+  // here and rule out 'falsy' values like 0 as well.
   if (val == false) {
-    // Guard clause - The .return_if_interaction() method returns either this.value when the button is clicked, or false otherwise.
-    //  -- Hence, we don't want to be able to assign a value of false to the button.
     this.value = true;
-    console.warn('WARNING: Attempted to assign value of false to button with label ' + this.label + '. Assigning true instead.');
+    console.warn('WARNING: Attempted to assign value of false to button with label \'' + this.label + '\'. Assigning true instead.');
   } else {
     this.value = val;
   }
@@ -222,11 +225,14 @@ function VN_Scene (name, x, y, w, h, p, tb_h) {
       return;
     }
 
+    // Use the name of the character as the key for the key-value character array
     let key = char.get_name();
+
     // Warn when character name conflict occurs
     if (key in this.characters) {
       console.warn('WARNING: Character name conflict for name ' + key + ' in scene ' + this.scene_name + '. Overriding pre-existing character.');
     }
+
     this.characters[key] = char;
   };
 
