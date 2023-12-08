@@ -18,10 +18,18 @@ File directory:
   | 
 ****************/
 let can_char, can_char2, can_scene;
-let counter = 0;
+
+// TO DO: Revise comment, a bit hard to understand.
+
+// Global variables for storing any dialogue choices or other options to the user, along with
+// whether we're displaying any options and the result of user decisions
+let VN_Current_Options_Displayed = '';
+let VN_Is_Drawing_Options = false;
+let VN_Option_Return_Value = false;
+let VN_Line_Counter = 1;
 
 function bg_incr_gray () {
-  background(counter * 255/40 + 255/80);
+  background(VN_Line_Counter * 255/40 + 255/80);
 }
 
 function say_result_of_butts () {
@@ -50,7 +58,6 @@ function setup() {
   createCanvas(600, 600);
 
   lines.splice(0, 0, ''); // Prepend an empty command since text files are one-indexed instead of zero-indexed.
-  parser = new VN_Parser(can_scene, lines);
 
   add_vn_background_to_list(bg_incr_gray);
   add_vn_character_to_list(can_char);
@@ -59,33 +66,22 @@ function setup() {
   add_vn_flag_to_list('butt');
   add_vn_special_function_to_list(say_result_of_butts);
 
+  can_scene.assign_instruction_set(lines);
+
   let tmp = '';
   while (tmp != 'pause') {
-    tmp = parser.execute_line(counter);
-    counter++;
+    tmp = can_scene.execute_instruction(VN_Line_Counter);
+    VN_Line_Counter++;
   }
 }
-
-let opt = '';
-let drawing_options = false;
-let opt_return = false;
 
 function draw() {
   can_scene.display();
 
-  if (drawing_options) {
-    opt.button_panel.display();
+  if (VN_Is_Drawing_Options) {
+    VN_Current_Options_Displayed.button_panel.display();
   }
 }
-
-// TO DO: Revise comment, a bit hard to understand.
-
-// Global variables for storing any dialogue choices or other options to the user, along with
-// whether we're displaying any options and the result of user decisions
-let VN_Current_Options_Displayed = '';
-let VN_Is_Drawing_Options = false;
-let VN_Option_Return_Value = false;
-let VN_Line_Counter = 0;
 
 function vn_handle_interaction (scene) {
   // Don't do anything if the scene's still printing the dialogue to the screen
@@ -98,7 +94,7 @@ function vn_handle_interaction (scene) {
   if (VN_Is_Drawing_Options) {
 
     // Then get the value of the button selected by the user if there is a button, otherwise set to false.
-    VN_Option_Return_Value = VN_Current_Options_Displayed.button.panel.return_interaction();
+    VN_Option_Return_Value = VN_Current_Options_Displayed.button_panel.return_interaction();
 
     // If the user *has* selected a button, i.e. we have not set to false in the last step...
     if (VN_Option_Return_Value != false) {
@@ -118,8 +114,9 @@ function vn_handle_interaction (scene) {
   // Now execute lines in the parser's instruction set until we hit a specific command.
   let tmp = '';
   while (true) {
-    tmp = execute_line(scene, VN_Line_Counter);
+    tmp = scene.execute_instruction(VN_Line_Counter);
     VN_Line_Counter++;
+    VN_Line_Counter %= scene.get_instructions_length();
 
     if (typeof tmp == 'object') {
       if ('target_flag' in tmp) {

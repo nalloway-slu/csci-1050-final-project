@@ -63,9 +63,26 @@ const VN_PARSER_KEYWORDS_MANY_PARAMS = ['if'];
 // instruction, then we return either `if` if the if-condition fails, or the value of the next index to look at if the
 // if-condition holds. If function fails to execute for some reason, it returns 'error'. Lastly, if the line is just empty,
 // then we do nothing and return 'empty'.
-function execute_instruction (scene, instruction) {
+
+VN_Scene.prototype.assign_instruction_set = function (instructions) {
+  this.instructions = instructions;
+  this.inst_length = instructions.length;
+}
+
+VN_Scene.prototype.get_instructions_length = function () {
+  return this.inst_length;
+}
+
+VN_Scene.prototype.execute_instruction = function (index) {
+  // Guard clause - do nothing if index is out of range of instruction set
+  if (index >= this.inst_length) {
+    console.error('ERROR: Attempted to execute instruction at line ' + index + ' for scene ' + this.name + ', but index was out of range.');
+    return;
+  }
+
+
   // Get rid of leading/ending whitespace if there be any
-  instruction = instruction.trim();
+  instruction = this.instructions[index].trim();
 
   // Immediately return if the instruction is the empty string
   if (instruction == '') {
@@ -87,16 +104,16 @@ function execute_instruction (scene, instruction) {
     // The above line returns true iff the initial keyword is in the array VN_PARSER_KEYWORDS_ZERO_PARAMS (see previous comment on .indexOf())
     switch (first_word) {
       case 'show':
-        scene.show_characters();
+        this.show_characters();
         break;
       case 'hide':
-        scene.hide_characters();
+        this.hide_characters();
         break;
       case 'say_nothing':
-        scene.set_dialogue('');
+        this.set_dialogue('');
         break;
       case 'clear':
-        scene.clear_all();
+        this.clear_all();
         break;
       case 'pause':
       case '#':
@@ -104,7 +121,7 @@ function execute_instruction (scene, instruction) {
         break;
       default:
         // This case should be impossible (key word: "should be"!)
-        console.error('ERROR: Something has gone horribly wrong in executing `' + instruction + '` of scene ' + scene.get_name());
+        console.error('ERROR: Something has gone horribly wrong in executing `' + instruction + '` of scene ' + this.name);
         return 'error';
     }
   }
@@ -114,7 +131,7 @@ function execute_instruction (scene, instruction) {
     if (first_word == 'say') {
       // Get the rest of the text in rhe instruction following the initial keyword
       let txt = instruction.substring(first_space + 1);
-      scene.set_dialogue(txt);
+      this.set_dialogue(txt);
     }
     else
     {
@@ -126,7 +143,7 @@ function execute_instruction (scene, instruction) {
         // See vn_handler.js for the global variables VN_List_Of_Backgrounds/Characters
         case 'bg':
           // TO DO: Make sure param is in array
-          scene.set_background(VN_List_Of_Backgrounds[param]);
+          this.set_background(VN_List_Of_Backgrounds[param]);
           break;
         case 'add':
           // TO DO: Make sure param is in array
@@ -134,14 +151,14 @@ function execute_instruction (scene, instruction) {
           // Since character names may contain spaces, we're changing any underscores written in the
           // instructions document into spaces.
           param = param.replaceAll('_', ' ');
-          scene.add_character(VN_List_Of_Characters[param]);
+          this.add_character(VN_List_Of_Characters[param]);
           break;
         case 'speaker':
-          scene.set_speaker(param);
+          this.set_speaker(param);
           break;
         case 'speed':
           param = parseInt(param);
-          scene.set_char_speed(param);
+          this.set_char_speed(param);
           break;
         case 'exec':
           // TO DO: Make sure param is in array
@@ -177,13 +194,13 @@ function execute_instruction (scene, instruction) {
         // Since character names may contain spaces, we're changing any underscores written in the
         // instructions document into spaces.
         param1 = param1.replaceAll('_', ' ');
-        scene.set_character_pose(param1, param2);
+        this.set_character_pose(param1, param2);
         break;
       case 'slot':
         // Since character names may contain spaces, we're changing any underscores written in the
         // instructions document into spaces.
         param1 = param1.replaceAll('_', ' ');
-        scene.set_active_speaker_slot(param1, param2);
+        this.set_active_speaker_slot(param1, param2);
         break;
       case 'options':
         // TO DO: Check to make sure param1 is a flag, param2 is a button panel, &c.
@@ -213,8 +230,6 @@ function execute_instruction (scene, instruction) {
         // Recall that for the `if` instruction, the function could return the goto-index instead of the instruction keyword.
         if (VN_List_Of_Flags[flag] == val) {
           return goto_index;
-        } else {
-          return 'if';
         }
       default:
         // Still yet another impossible case.

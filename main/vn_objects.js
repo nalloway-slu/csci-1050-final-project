@@ -178,7 +178,7 @@ function VN_Button_Panel (name, clr = 'CYAN') {
 
 // Define a scene constructor
 function VN_Scene (name, x, y, w, h, p, tb_h) {
-  this.scene_name = name;     // For debugging purposes, so as to report to console which scene broke
+  this.name = name;     // For debugging purposes, so as to report to console which scene broke
   this.background = () => {}; // Bg's are fxn's so that we can either have procedurally gen'd bg's or just a static image, at our choosing
   
   // Properties for position of scene on screen, other elements in scene
@@ -208,7 +208,7 @@ function VN_Scene (name, x, y, w, h, p, tb_h) {
 
   // Begin methods
   this.get_name = function () {
-    return this.scene_name;
+    return this.name;
   };
 
   this.set_background = function (bg) {
@@ -221,7 +221,7 @@ function VN_Scene (name, x, y, w, h, p, tb_h) {
   this.add_character = function (char) {
     // Guard clause - make sure the input is actually a character
     if (char.constructor.name != 'VN_Character') {
-      console.error('ERROR: Atttempted to add a character to scene ' + this.scene_name + ' except it wasn\'t actually of type VN_Character.');
+      console.error('ERROR: Atttempted to add a character to scene ' + this.name + ' except it wasn\'t actually of type VN_Character.');
       return;
     }
 
@@ -230,7 +230,7 @@ function VN_Scene (name, x, y, w, h, p, tb_h) {
 
     // Warn when character name conflict occurs
     if (key in this.characters) {
-      console.warn('WARNING: Character name conflict for name ' + key + ' in scene ' + this.scene_name + '. Overriding pre-existing character.');
+      console.warn('WARNING: Character name conflict for name ' + key + ' in scene ' + this.name + '. Overriding pre-existing character.');
     }
 
     this.characters[key] = char;
@@ -240,7 +240,7 @@ function VN_Scene (name, x, y, w, h, p, tb_h) {
     if (key in this.characters) {
       this.characters[key].set_pose(pose);
     } else {
-      console.error('ERROR: Character ' + key + ' not found for scene ' + this.scene_name);
+      console.error('ERROR: Character ' + key + ' not found for scene ' + this.name);
     }
   };
 
@@ -251,7 +251,7 @@ function VN_Scene (name, x, y, w, h, p, tb_h) {
     } else {
       // Default case
       this.speaker = 'NONE';
-      console.warn('WARNING: Speaker of scene ' + this.scene_name + ' set to NONE.');
+      console.warn('WARNING: Speaker of scene ' + this.name + ' set to NONE.');
     }
   };
 
@@ -265,10 +265,10 @@ function VN_Scene (name, x, y, w, h, p, tb_h) {
       } else if (side == 'RIGHT') {
         this.active_speakers.right = this.characters[key];
       } else {
-        console.error('ERROR: Attempted to assign a character to non-existing side of scene ' + this.scene_name);
+        console.error('ERROR: Attempted to assign a character to non-existing side of scene ' + this.name);
       }
     } else {
-      console.error('ERROR: Character ' + key + ' not found for scene ' + this.scene_name);
+      console.error('ERROR: Character ' + key + ' not found for scene ' + this.name);
     }
   };
 
@@ -284,7 +284,7 @@ function VN_Scene (name, x, y, w, h, p, tb_h) {
   // Methods for handling the textbox
   this.set_dialogue = function (msg) {
     if (typeof msg != 'string') {
-      console.error('ERROR: Attempted to assign a non-string as dialogue in scene ' + this.scene_name + '. Assgining the empty string instead.');
+      console.error('ERROR: Attempted to assign a non-string as dialogue in scene ' + this.name + '. Assgining the empty string instead.');
       msg = '';
     }
     this.dialogue = msg;
@@ -293,10 +293,10 @@ function VN_Scene (name, x, y, w, h, p, tb_h) {
 
   this.set_char_speed = function (v) {
     if (typeof v != 'number') {
-      console.error('ERROR: Attempted to assign a non-number as the character scroll speed in ' + this.scene_name + '. Now using speed = 1.');
+      console.error('ERROR: Attempted to assign a non-number as the character scroll speed in ' + this.name + '. Now using speed = 1.');
       v = 1;
     } else if (!Number.isFinite(v) || v <= 0) {
-      console.error('ERROR: Attempted to assign NaN/infinite/negative as the character scroll speed in ' + this.scene_name + '. Now using speed = 1.');
+      console.error('ERROR: Attempted to assign NaN/infinite/negative as the character scroll speed in ' + this.name + '. Now using speed = 1.');
       v = 1;
     }
     this.dg_char_speed = v;
