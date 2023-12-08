@@ -78,42 +78,68 @@ function draw() {
   }
 }
 
-function mousePressed() {
-  if (can_scene.dialogue_not_finished()) {
+// TO DO: Revise comment, a bit hard to understand.
+
+// Global variables for storing any dialogue choices or other options to the user, along with
+// whether we're displaying any options and the result of user decisions
+let VN_Current_Options_Displayed = '';
+let VN_Is_Drawing_Options = false;
+let VN_Option_Return_Value = false;
+let VN_Line_Counter = 0;
+
+function vn_handle_interaction (scene) {
+  // Don't do anything if the scene's still printing the dialogue to the screen
+  if (scene.dialogue_not_finished()) {
     return;
   }
 
-  if (drawing_options) {
-    opt_return = opt.button_panel.return_interaction();
-    if (opt_return != false) {
-      VN_List_Of_Flags[opt.target_flag] = opt_return;
-      drawing_options = false;
+  // Logic for when displaying options to the user.
+  // If we are displaying options to the user....
+  if (VN_Is_Drawing_Options) {
+
+    // Then get the value of the button selected by the user if there is a button, otherwise set to false.
+    VN_Option_Return_Value = VN_Current_Options_Displayed.button.panel.return_interaction();
+
+    // If the user *has* selected a button, i.e. we have not set to false in the last step...
+    if (VN_Option_Return_Value != false) {
+
+      // Then set the value of the associated flag to the value of the selected button...
+      VN_List_Of_Flags[VN_Current_Options_Displayed.target_flag] = VN_Option_Return_Value;
+
+      // And stop drawing the buttons on the screen.
+      VN_Is_Drawing_Options = false;
     } else {
+
+      // Otherwise, ignore the user input.
       return;
     }
   }
 
+  // Now execute lines in the parser's instruction set until we hit a specific command.
   let tmp = '';
   while (true) {
-    tmp = parser.execute_line(counter);
-    counter++;
-    counter %= lines.length;
+    tmp = execute_line(scene, VN_Line_Counter);
+    VN_Line_Counter++;
 
     if (typeof tmp == 'object') {
       if ('target_flag' in tmp) {
-        opt = tmp;
-        drawing_options = true;
+        VN_Current_Options_Displayed = tmp;
+        VN_Is_Drawing_Options = true;
       }
     }
 
     if (typeof tmp == 'number') {
-      counter = tmp;
+      VN_Line_Counter = tmp;
     }
 
     if (tmp == 'say' || tmp == 'pause') {
       break;
     }
   }
+}
+
+function mousePressed() {
+  vn_handle_interaction(can_scene);
 }
 
 // function setup() {

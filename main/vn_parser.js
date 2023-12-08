@@ -35,11 +35,11 @@ The following keywords do NOT appear in VN_Scene:
    -- Functions identically to the `pause` command but is used for writing comments in the instructions document.
   exec <func>
    -- Executes special function <func> from VN_List_Of_Special_Functions
-  goto <line>
-   -- Returns line number <line> so that the handler knows to jump there
+  goto <index>
+   -- Returns <index> so that the handler knows to jump to that number line
   options <flag> <button_panel>
    -- Returns an object consisting of the key-value pairs `target_flag: <flag>` and `button_panel: VN_List_Of_Button_Panels[<button_panel>]`
-  if <flag> <value> goto <line>
+  if <flag> <value> goto <index>
    -- If the value of the variable <flag> is <value>, then returns line number <line> so that the handler knows to jump there
 
 Note on the <char> parameter: If the character's name has spaces, replace them with underscores in the instructions
@@ -54,188 +54,180 @@ const VN_PARSER_KEYWORDS_ONE_PARAMS  = ['bg', 'add', 'speaker', 'say', 'speed', 
 const VN_PARSER_KEYWORDS_TWO_PARAMS  = ['pose', 'slot', 'options'];
 const VN_PARSER_KEYWORDS_MANY_PARAMS = ['if'];
 
-// Define the parser
-function VN_Parser (scene, instructions) {
-  // TO DO: Type checking!!
-  this.scene = scene;
-  this.name = scene.get_name();
-  this.instructions = instructions; // This assignment is the primary reason why we're making the parser into a kind of object: I don't want
-                                    // to have to reinput the list of instructions every time I want to parse a new line -- that sounds
-                                    // like unnecessary extra work for the computer.
+// TO CONSIDER: Assign this function as a method to VN_Scene.prototype?
 
-  // This method executes line number `index` from `this.instructions` and returns  the type of instruction performed, except
-  // for a few cases: If the method executes an `options` command, then it returns an object containing the optioned-on flag and the
-  // passed-in button panel. If the method executes a `goto` or `if` instruction, then it returns the value of the next index
-  // to look at. If instead the method fails to execute for some reason, it returns 'error'. Lastly, if the line is just empty, then
-  // we do nothing and return 'empty'.
-  this.execute_line = function (index = this.current_index) {
-    let line = this.instructions[index];
-    // Get rid of leading/ending whitespace if there be any
-    line = line.trim();
+// This function executes an instruction and returns the type of instruction performed, except for a few cases: If the
+// function executes an `options` command, then it returns an object containing a VN_Button_Panel object and the name of
+// a flag whose value will be set by the user selecting one of the buttons on the button panel. If the function executes
+// a `goto` instruction, then it returns the value of the next index to look at. Similarly, if the function executes an `if`
+// instruction, then we return either `if` if the if-condition fails, or the value of the next index to look at if the
+// if-condition holds. If function fails to execute for some reason, it returns 'error'. Lastly, if the line is just empty,
+// then we do nothing and return 'empty'.
+function execute_instruction (scene, instruction) {
+  // Get rid of leading/ending whitespace if there be any
+  instruction = instruction.trim();
 
-    // Immediately return if the line is the empty string
-    if (line == '') {
-      return 'empty';
+  // Immediately return if the instruction is the empty string
+  if (instruction == '') {
+    return 'empty';
+  }
+
+  // Determine if instruction is a single word, and if not, extract the first word only
+  let first_space = instruction.indexOf(' ');
+  let first_word;
+
+  if (first_space == -1) { // the .indexOf() method returns -1 if the input is not in the string
+    first_word = instruction;
+  } else {
+    first_word = instruction.substring(0, first_space);
+  }
+
+  // Execute the instruction based on the initial keyword
+  if (VN_PARSER_KEYWORDS_ZERO_PARAMS.indexOf(first_word) > -1) {
+    // The above line returns true iff the initial keyword is in the array VN_PARSER_KEYWORDS_ZERO_PARAMS (see previous comment on .indexOf())
+    switch (first_word) {
+      case 'show':
+        scene.show_characters();
+        break;
+      case 'hide':
+        scene.hide_characters();
+        break;
+      case 'say_nothing':
+        scene.set_dialogue('');
+        break;
+      case 'clear':
+        scene.clear_all();
+        break;
+      case 'pause':
+      case '#':
+        // These commands do nothing
+        break;
+      default:
+        // This case should be impossible (key word: "should be"!)
+        console.error('ERROR: Something has gone horribly wrong in executing `' + instruction + '` of scene ' + scene.get_name());
+        return 'error';
     }
-
-    // Determine if line is a single word, and if not, extract the first word only
-    let first_space = line.indexOf(' ');
-    let first_word;
-
-    if (first_space == -1) { // the .indexOf() method returns -1 if the input is not in the string
-      first_word = line;
-    } else {
-      first_word = line.substring(0, first_space);
+  }
+  else if (VN_PARSER_KEYWORDS_ONE_PARAMS.indexOf(first_word) > -1)
+  {
+    // If the initial keyword is `say`, then the rest of the instruction consists of text we want a character to say
+    if (first_word == 'say') {
+      // Get the rest of the text in rhe instruction following the initial keyword
+      let txt = instruction.substring(first_space + 1);
+      scene.set_dialogue(txt);
     }
-
-    // Execute the line based on the initial keyword
-    if (VN_PARSER_KEYWORDS_ZERO_PARAMS.indexOf(first_word) > -1) {
-      // The above line returns true iff the initial keyword is in the array VN_PARSER_KEYWORDS_ZERO_PARAMS (see previous comment on .indexOf())
-      switch (first_word) {
-        case 'show':
-          this.scene.show_characters();
-          break;
-        case 'hide':
-          this.scene.hide_characters();
-          break;
-        case 'say_nothing':
-          this.scene.set_dialogue('');
-          break;
-        case 'clear':
-          this.scene.clear_all();
-          break;
-        case 'pause':
-        case '#':
-          // These commands do nothing
-          break;
-        default:
-          // This case should be impossible (key word: "should be"!)
-          console.error('ERROR: Something has gone horribly wrong in executing line ' + index + ' of scene ' + this.name);
-          return 'error';
-      }
-    }
-    else if (VN_PARSER_KEYWORDS_ONE_PARAMS.indexOf(first_word) > -1)
+    else
     {
-      // If the initial keyword is `say`, then the rest of the line consists of text we want a character to say
-      if (first_word == 'say') {
-        // Get the rest of the text in `line` following the initial keyword
-        let txt = line.substring(first_space + 1);
-        this.scene.set_dialogue(txt);
-      }
-      else
-      {
-        // Otherwise, the line should consist of only two words, the initial keyword and the parameter. If there's any additional text,
-        // then we ignore it.
-        let cmd = line.split(' ', 2);
-        let param = cmd[1];
-        switch (first_word) {
-          // See vn_handler.js for the global variables VN_List_Of_Backgrounds/Characters
-          case 'bg':
-            // TO DO: Make sure param is in array
-            this.scene.set_background(VN_List_Of_Backgrounds[param]);
-            break;
-          case 'add':
-            // TO DO: Make sure param is in array
-
-            // Since character names may contain spaces, we're changing any underscores written in the
-            // instructions document into spaces.
-            param = param.replaceAll('_', ' ');
-            this.scene.add_character(VN_List_Of_Characters[param]);
-            break;
-          case 'speaker':
-            this.scene.set_speaker(param);
-            break;
-          case 'speed':
-            param = parseInt(param);
-            this.scene.set_char_speed(param);
-            break;
-          case 'exec':
-            // TO DO: Make sure param is in array
-            VN_List_Of_Special_Functions[param]();
-            break;
-          case 'goto':
-            // Remember that parameters in the instruction file are strings, so we have to convert to number first
-            param = parseInt(param);
-
-            // Make sure the parameter that the goto command comes with is actually a valid index
-            if (param >= 0) {
-              return param;
-            }
-
-            // Else...
-            console.error('ERROR: Attempted to execute goto command at line ' + index + ' of scene ' + this.name + ', but given command does not have valid index');
-            return 'error';
-          default:
-            // We cover the impossible case as before
-            console.error('ERROR: Something has gone horribly wrong in executing line ' + index + ' of scene ' + this.name);
-            return 'error';
-        }
-      }
-    }
-    else if (VN_PARSER_KEYWORDS_TWO_PARAMS.indexOf(first_word) > -1)
-    {
-      // In this case, the line should consist of an initial keyword and two additional parameters. As before, we ignore any extra text.
-      let cmd = line.split(' ', 3);
-      let param1 = cmd[1];
-      let param2 = cmd[2];
+      // Otherwise, the instruction should consist of only two words, the initial keyword and the parameter. If there's any additional text,
+      // then we ignore it.
+      let cmd = instruction.split(' ', 2);
+      let param = cmd[1];
       switch (first_word) {
-        case 'pose':
+        // See vn_handler.js for the global variables VN_List_Of_Backgrounds/Characters
+        case 'bg':
+          // TO DO: Make sure param is in array
+          scene.set_background(VN_List_Of_Backgrounds[param]);
+          break;
+        case 'add':
+          // TO DO: Make sure param is in array
+
           // Since character names may contain spaces, we're changing any underscores written in the
           // instructions document into spaces.
-          param1 = param1.replaceAll('_', ' ');
-          this.scene.set_character_pose(param1, param2);
+          param = param.replaceAll('_', ' ');
+          scene.add_character(VN_List_Of_Characters[param]);
           break;
-        case 'slot':
-          // Since character names may contain spaces, we're changing any underscores written in the
-          // instructions document into spaces.
-          param1 = param1.replaceAll('_', ' ');
-          this.scene.set_active_speaker_slot(param1, param2);
+        case 'speaker':
+          scene.set_speaker(param);
           break;
-        case 'options':
-          // TO DO: Check to make sure param1 is a flag, param2 is a button panel, &c.
-          return {
-            target_flag: param1,
-            button_panel: VN_List_Of_Button_Panels[param2]
-          };
-        default:
-          // Yet another impossible case we still have to cover
-          console.error('ERROR: Something has gone horribly wrong in executing line ' + index + ' of scene ' + this.name);
-          return 'error';
-      }
-    }
-    else if (VN_PARSER_KEYWORDS_MANY_PARAMS.indexOf(first_word) > -1)
-    {
-      switch (first_word) {
-        case 'if':
-          // Here the format of the command should be `if <flag> <value> goto <line>`. As usual, we will ignore any extra text.
-          //  -- We're also going to ignore the `goto` keyword as it's not actually relevant to the execution of the command here.
-          //     We specify including the `goto` keyword for the `if` command just to aid readability when looking at the
-          //     scene instruction files.
-          let cmd = line.split(' ', 5);
-          let flag = cmd[1];
-          let val = parseInt(cmd[2]);       // Remember that parameters in the instruction
-          let next_line = parseInt(cmd[4]); // file are strings, so we have to convert them to numbers.
+        case 'speed':
+          param = parseInt(param);
+          scene.set_char_speed(param);
+          break;
+        case 'exec':
+          // TO DO: Make sure param is in array
+          VN_List_Of_Special_Functions[param]();
+          break;
+        case 'goto':
+          // Remember that parameters in the instruction file are strings, so we have to convert to number first
+          param = parseInt(param);
 
-          // Recall that for the `if` instruction, the method returns the value of the next index in the list of instructions
-          // that the handler needs to look at.
-          if (VN_List_Of_Flags[flag] == val) {
-            return next_line;
-          } else {
-            return index + 1;
+          // Make sure the parameter that the goto command comes with is actually a valid index
+          if (param >= 0) {
+            return param;
           }
+
+          // Else...
+          console.error('ERROR: Attempted to execute goto command `' + instruction + '` of scene ' + scene.get_name() + ', but given command does not have valid index');
+          return 'error';
         default:
-          // Still yet another impossible case.
-          console.error('ERROR: Something has gone horribly wrong in executing line ' + index + ' of scene ' + this.name);
+          // We cover the impossible case as before
+          console.error('ERROR: Something has gone horribly wrong in executing `' + instruction + '` of scene ' + scene.get_name());
           return 'error';
       }
-    } else {
-      // The initial keyword wasn't in any of the lists of valid keywords, so...
-      console.error('ERROR: Unable to execute line ' + index + ' of scene ' + this.name + ' due to unrecognized keyword.');
-      return 'error';
     }
+  }
+  else if (VN_PARSER_KEYWORDS_TWO_PARAMS.indexOf(first_word) > -1)
+  {
+    // In this case, the instruction should consist of an initial keyword and two additional parameters. As before, we ignore any extra text.
+    let cmd = instruction.split(' ', 3);
+    let param1 = cmd[1];
+    let param2 = cmd[2];
+    switch (first_word) {
+      case 'pose':
+        // Since character names may contain spaces, we're changing any underscores written in the
+        // instructions document into spaces.
+        param1 = param1.replaceAll('_', ' ');
+        scene.set_character_pose(param1, param2);
+        break;
+      case 'slot':
+        // Since character names may contain spaces, we're changing any underscores written in the
+        // instructions document into spaces.
+        param1 = param1.replaceAll('_', ' ');
+        scene.set_active_speaker_slot(param1, param2);
+        break;
+      case 'options':
+        // TO DO: Check to make sure param1 is a flag, param2 is a button panel, &c.
+        return {
+          target_flag: param1,
+          button_panel: VN_List_Of_Button_Panels[param2]
+        };
+      default:
+        // Yet another impossible case we still have to cover
+        console.error('ERROR: Something has gone horribly wrong in executing `' + instruction + '` of scene ' + scene.get_name());
+        return 'error';
+    }
+  }
+  else if (VN_PARSER_KEYWORDS_MANY_PARAMS.indexOf(first_word) > -1)
+  {
+    switch (first_word) {
+      case 'if':
+        // Here the format of the command should be `if <flag> <value> goto <index>`. As usual, we will ignore any extra text.
+        //  -- We're also going to ignore the `goto` keyword as it's not actually relevant to the execution of the command here.
+        //     We specify including the `goto` keyword for the `if` command just to aid readability when looking at the
+        //     scene instruction files.
+        let cmd = instruction.split(' ', 5);
+        let flag = cmd[1];
+        let val = parseInt(cmd[2]);       // Remember that parameters in the instruction
+        let goto_index = parseInt(cmd[4]); // file are strings, so we have to convert them to numbers.
 
-    // If all is successful (and we didn't return earlier), then return the initial keyword to the handler.
-    return first_word;
-    
-  };
+        // Recall that for the `if` instruction, the function could return the goto-index instead of the instruction keyword.
+        if (VN_List_Of_Flags[flag] == val) {
+          return goto_index;
+        } else {
+          return 'if';
+        }
+      default:
+        // Still yet another impossible case.
+        console.error('ERROR: Something has gone horribly wrong in executing `' + instruction + '` of scene ' + scene.get_name());
+        return 'error';
+    }
+  } else {
+    // The initial keyword wasn't in any of the lists of valid keywords, so...
+    console.error('ERROR: Unable to execute `' + instruction + '` of scene ' + scene.get_name() + ' due to unrecognized keyword.');
+    return 'error';
+  }
+
+  // If all is successful (and we didn't return earlier), then return the initial keyword to the handler.
+  return first_word;
+  
 }
