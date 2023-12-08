@@ -49,7 +49,7 @@ function preload() {
 function setup() {
   createCanvas(600, 600);
 
-  lines.splice(0, 0, '');
+  lines.splice(0, 0, ''); // Prepend an empty command since text files are one-indexed instead of zero-indexed.
   parser = new VN_Parser(can_scene, lines);
 
   add_vn_background_to_list(bg_incr_gray);

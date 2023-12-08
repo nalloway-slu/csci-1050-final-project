@@ -7,7 +7,9 @@ store those objects in key-value arrays here so that they may be referenced from
 access point.
 
 Example of use:
-  
+  When the parser finds an `options` command, it needs to set up both a flag and a button panel whose result
+  needs to end up becoming the value of the flag. To do so, the parser grabs both the flag and the button panel
+  from the global arrays VN_List_Of_Flags and VN_List_Of_Button_Panels.
 ****************/
 
 let VN_List_Of_Backgrounds = [];
