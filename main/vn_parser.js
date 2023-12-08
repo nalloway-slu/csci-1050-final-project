@@ -20,6 +20,8 @@ List of keywords, ordered by appearance in the definition of the VN_Scene constr
    -- Hides all the characters
   say <msg>
    -- Sets the displayed dialogue to <msg>
+  say_nothing
+   -- Sets the displayed dialogue to the empty string
   speed <speed>
    -- Sets the character scroll speed to be <speed> characters per frame
   clear
@@ -29,6 +31,8 @@ List of keywords, ordered by appearance in the definition of the VN_Scene constr
 TO DO: Decide if the following needs refactoring into inclusion in the VN_Scene constructor
 
 The following keywords do NOT appear in VN_Scene:
+  exec <func>
+   -- Executes special function <func> from VN_List_Of_Special_Functions
   options <flag> <option_sequence>
     -- TO DO: Write documentation here
   if <flag> <value> goto <line>
@@ -42,8 +46,8 @@ The following keywords do NOT appear in VN_Scene:
 // TO DO CONTINUALLY: Update list of keywords as you expand functionality of VN_Scene
 
 // List of valid keywords accepted by the parser, in order of how many parameters they take
-const VN_PARSER_KEYWORDS_ZERO_PARAMS = ['show', 'hide', 'clear'];
-const VN_PARSER_KEYWORDS_ONE_PARAMS  = ['bg', 'add', 'speaker', 'say', 'speed'];
+const VN_PARSER_KEYWORDS_ZERO_PARAMS = ['show', 'hide', 'say_nothing', 'clear'];
+const VN_PARSER_KEYWORDS_ONE_PARAMS  = ['bg', 'add', 'speaker', 'say', 'speed', 'exec'];
 const VN_PARSER_KEYWORDS_TWO_PARAMS  = ['pose', 'slot', 'options'];
 const VN_PARSER_KEYWORDS_MANY_PARAMS = ['if'];
 
@@ -92,6 +96,9 @@ function VN_Parser (scene, instructions) {
         case 'hide':
           this.scene.hide_characters();
           break;
+        case 'say_nothing':
+          this.scene.set_dialogue('');
+          break;
         case 'clear':
           this.scene.clear_all();
           break;
@@ -128,6 +135,9 @@ function VN_Parser (scene, instructions) {
             break;
           case 'speed':
             this.scene.set_char_speed(param);
+            break;
+          case 'exec':
+            VN_List_Of_Special_Functions[param]();
             break;
           default:
             // We cover the impossible case as before

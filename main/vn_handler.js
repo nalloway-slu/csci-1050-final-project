@@ -7,6 +7,7 @@ TO DO: Finish rest of documentation!
 let VN_List_Of_Backgrounds = [];
 let VN_List_Of_Characters = [];
 let VN_List_Of_Flags = [];
+let VN_List_Of_Special_Functions = [];
 let VN_List_Of_Scenes = [];
 
 function add_vn_background_to_list (bg) {
@@ -19,6 +20,10 @@ function add_vn_character_to_list (char) {
 
 function add_vn_flag_to_list (flag) {
 
+}
+
+function add_vn_special_function_to_list (func) {
+  VN_List_Of_Special_Functions[func.name] = func;
 }
 
 function add_vn_scene_to_list (scene) {
