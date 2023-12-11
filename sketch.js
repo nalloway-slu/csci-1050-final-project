@@ -56,6 +56,7 @@ function preload() {
 
 function setup() {
   createCanvas(600, 600);
+  textFont('Courier New');
 
   lines.splice(0, 0, ''); // Prepend an empty command since text files are one-indexed instead of zero-indexed.
 

@@ -170,11 +170,11 @@ VN_Scene.prototype.execute_instruction = function (index) {
           }
 
           // Else...
-          console.error('ERROR: Attempted to execute goto command `' + instruction + '` of scene ' + scene.get_name() + ', but given command does not have valid index');
+          console.error('ERROR: Attempted to execute goto command `' + instruction + '` of scene ' + this.name + ', but given command does not have valid index');
           return 'error';
         default:
           // We cover the impossible case as before
-          console.error('ERROR: Something has gone horribly wrong in executing `' + instruction + '` of scene ' + scene.get_name());
+          console.error('ERROR: Something has gone horribly wrong in executing `' + instruction + '` of scene ' + this.name);
           return 'error';
       }
     }
@@ -206,7 +206,7 @@ VN_Scene.prototype.execute_instruction = function (index) {
         };
       default:
         // Yet another impossible case we still have to cover
-        console.error('ERROR: Something has gone horribly wrong in executing `' + instruction + '` of scene ' + scene.get_name());
+        console.error('ERROR: Something has gone horribly wrong in executing `' + instruction + '` of scene ' + this.name);
         return 'error';
     }
   }
@@ -227,14 +227,15 @@ VN_Scene.prototype.execute_instruction = function (index) {
         if (VN_List_Of_Flags[flag] == val) {
           return goto_index;
         }
+        break;
       default:
         // Still yet another impossible case.
-        console.error('ERROR: Something has gone horribly wrong in executing `' + instruction + '` of scene ' + scene.get_name());
+        console.error('ERROR: Something has gone horribly wrong in executing `' + instruction + '` of scene ' + this.name);
         return 'error';
     }
   } else {
     // The initial keyword wasn't in any of the lists of valid keywords, so...
-    console.error('ERROR: Unable to execute `' + instruction + '` of scene ' + scene.get_name() + ' due to unrecognized keyword.');
+    console.error('ERROR: Unable to execute `' + instruction + '` of scene ' + this.name + ' due to unrecognized keyword.');
     return 'error';
   }
 
