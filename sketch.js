@@ -119,6 +119,7 @@ function vn_handle_interaction (scene) {
     VN_Line_Counter++;
     VN_Line_Counter %= scene.get_instructions_length();
 
+    // We've hit an `options` command, so we'll set up a button panel here
     if (typeof tmp == 'object') {
       if ('target_flag' in tmp) {
         VN_Current_Options_Displayed = tmp;
@@ -126,10 +127,12 @@ function vn_handle_interaction (scene) {
       }
     }
 
+    // We've hit an `if` command whose if-condition was met, so we'll go to the given index
     if (typeof tmp == 'number') {
       VN_Line_Counter = tmp;
     }
 
+    // Pause execution if we hit `say` or `pause`
     if (tmp == 'say' || tmp == 'pause') {
       break;
     }
