@@ -1,7 +1,7 @@
 /****************
 vn_parser.js - Defines how to interpret text files in `assets` folder containing VN scene dialogs and instructions
 
-To expedite the writing process, we invent a language and write a parser 
+To expedite the writing process, we invent a language and write a parser for it:
 
 List of keywords, ordered by appearance in the definition of the VN_Scene constructor (see vn_objects.js):
   img <key>
@@ -17,7 +17,7 @@ List of keywords, ordered by appearance in the definition of the VN_Scene constr
   say_nothing
    -- Sets the displayed dialogue to the empty string
   speed <speed>
-   -- Sets the character scroll speed to be <speed> characters per frame
+   -- Sets the text character scroll speed to be <speed> characters per frame
   clear
    -- Clears the scene image and dialogue
 
@@ -34,16 +34,11 @@ The following keywords do NOT appear in VN_Scene:
    -- Returns an object consisting of the key-value pairs `target_flag: <flag>` and `button_panel: VN_List_Of_Button_Panels[<button_panel>]`
   if <flag> <value> goto <index>
    -- If the value of the variable <flag> is <value>, then returns line number <line> so that the handler knows to jump there
-
-Note on the <char> parameter: If the character's name has spaces, replace them with underscores in the instructions
-  document.
 ****************/
-
-// TO DO CONTINUALLY: Update list of keywords as you expand functionality of VN_Scene
 
 // List of valid keywords accepted by the parser, in order of how many parameters they take
 const VN_PARSER_KEYWORDS_ZERO_PARAMS = ['speaker_is_thinking', 'speaker_is_speaking', 'say_nothing', 'clear', 'pause', '#'];
-const VN_PARSER_KEYWORDS_ONE_PARAMS  = ['im', 'speaker', 'say', 'speed', 'exec', 'goto'];
+const VN_PARSER_KEYWORDS_ONE_PARAMS  = ['img', 'speaker', 'say', 'speed', 'exec', 'goto'];
 const VN_PARSER_KEYWORDS_TWO_PARAMS  = ['options'];
 const VN_PARSER_KEYWORDS_MANY_PARAMS = ['if'];
 

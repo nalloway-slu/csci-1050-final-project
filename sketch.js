@@ -21,13 +21,6 @@ let can_char, can_char2, can_scene;
 
 // TO DO: Revise comment, a bit hard to understand.
 
-// Global variables for storing any dialogue choices or other options to the user, along with
-// whether we're displaying any options and the result of user decisions
-let VN_Current_Options_Displayed = '';
-let VN_Is_Drawing_Options = false;
-let VN_Option_Return_Value = false;
-let VN_Line_Counter = 1;
-
 function say_result_of_butts () {
   let adj;
   if (VN_List_Of_Flags['butt'] == 1) {
@@ -85,6 +78,13 @@ function draw() {
   rect(1, 1, width - 1, height - 1);
   pop();
 }
+
+// Global variables for storing any dialogue choices or other options to the user, along with
+// whether we're displaying any options and the result of user decisions
+let VN_Current_Options_Displayed = '';
+let VN_Is_Drawing_Options = false;
+let VN_Option_Return_Value = false;
+let VN_Line_Counter = 1;
 
 function vn_handle_interaction (scene) {
   // Don't do anything if the scene's still printing the dialogue to the screen
