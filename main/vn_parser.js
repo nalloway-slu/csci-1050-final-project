@@ -45,11 +45,11 @@ const VN_PARSER_KEYWORDS_MANY_PARAMS = ['if'];
 VN_Scene.prototype.assign_instruction_set = function (instructions) {
   this.instructions = instructions;
   this.inst_length = instructions.length;
-}
+};
 
 VN_Scene.prototype.get_instructions_length = function () {
   return this.inst_length;
-}
+};
 
 // This method executes an instruction and returns the type of instruction performed, except for a few cases: If the
 // method executes an `options` command, then it returns an object containing a VN_Button_Panel object and the name of
@@ -213,4 +213,4 @@ VN_Scene.prototype.execute_instruction = function (index) {
   // If all is successful (and we didn't return earlier), then return the initial keyword to the handler.
   return first_word;
   
-}
+};
