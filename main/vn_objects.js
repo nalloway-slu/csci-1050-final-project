@@ -1,5 +1,5 @@
 /****************
-vn_objects.js - Defines object constructors for characters, scenes that occur in the VN.
+vn_objects.js - Defines object constructors for characters, buttons, and scenes that are used for the VN
 
 Create a character using `new VN_Character(name)`, where `name` is the name of the character.
 The `name` parmater will be used by the VN_Scene object to display in the on-screen namebox.

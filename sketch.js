@@ -11,7 +11,7 @@ File directory:
   style.css       - Stylesheets for said HTML
   sketch.js       - Main script file, loads all the assets and calls all the requisite functions [TO DO: Revise]
   main
-  | vn_objects.js - Defines object constructors for characters, scenes that occur in the VN
+  | vn_objects.js - Defines object constructors for characters, buttons, and scenes that are used for the VN
   | vn_parser.js  - Defines how to interpret text files in `assets` folder containing VN scene dialogs and instructions
   | vn_globals.js - Stores variables used by other VN objects in a shared, global location
   assets
