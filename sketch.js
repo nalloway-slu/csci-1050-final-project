@@ -28,10 +28,6 @@ let VN_Is_Drawing_Options = false;
 let VN_Option_Return_Value = false;
 let VN_Line_Counter = 1;
 
-function bg_incr_gray () {
-  background(VN_Line_Counter * 255/40 + 255/80);
-}
-
 function say_result_of_butts () {
   let adj;
   if (VN_List_Of_Flags['butt'] == 1) {
@@ -43,9 +39,13 @@ function say_result_of_butts () {
 }
 
 function preload() {
-  can_char = new VN_Character('testee');
-  can_char2 = new VN_Character('testee 2');
   can_scene = new VN_Scene('test', 2, 2, 596, 596, 10, 596/3); // TO DO: Explain params, this looks a bit opaque
+
+  can_char = new VN_Character('testee', color(0, 200, 200), color(0, 240, 240));
+  can_char2 = new VN_Character('testee 2', color(220, 160, 30), color(255, 200, 40));
+
+  can_scene.add_character(can_char, 'testee');
+  can_scene.add_character(can_char2, 'testee_2');
 
   can_butts = new VN_Button_Panel('can_butts', 'ORANGE');
   can_butts.add_button('do something', 1, 300, 200, 100, 25);
@@ -60,9 +60,6 @@ function setup() {
 
   lines.splice(0, 0, ''); // Prepend an empty command since text files are one-indexed instead of zero-indexed.
 
-  add_vn_background_to_list(bg_incr_gray);
-  add_vn_character_to_list(can_char);
-  add_vn_character_to_list(can_char2);
   add_vn_button_panel_to_list(can_butts);
   add_vn_flag_to_list('butt');
   add_vn_special_function_to_list(say_result_of_butts);

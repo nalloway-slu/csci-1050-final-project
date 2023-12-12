@@ -14,29 +14,9 @@ Example of use:
   from the global arrays VN_List_Of_Flags and VN_List_Of_Button_Panels.
 ****************/
 
-let VN_List_Of_Backgrounds = [];
-let VN_List_Of_Characters = [];
 let VN_List_Of_Flags = [];
 let VN_List_Of_Button_Panels = [];
 let VN_List_Of_Special_Functions = [];
-
-function add_vn_background_to_list (bg) {
-  // Guard clause - make sure the input is actually a function
-  if (typeof bg != 'function') {
-    console.error('ERROR: Atttempted to add a background fxn to global list of backgrounds except it wasn\'t actually a function.');
-    return;
-  }
-  VN_List_Of_Backgrounds[bg.name] = bg;
-}
-
-function add_vn_character_to_list (char) {
-  // Guard clause - make sure the input is actually a character
-  if (char.constructor.name != 'VN_Character') {
-    console.error('ERROR: Atttempted to add a character to global list of characters except it wasn\'t actually of type VN_Character.');
-    return;
-  }
-  VN_List_Of_Characters[char.get_name()] = char;
-}
 
 function add_vn_flag_to_list (flag) {
   VN_List_Of_Flags[flag] = false;

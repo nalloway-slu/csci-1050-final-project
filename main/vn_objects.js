@@ -19,66 +19,24 @@ TO DO: Write note about parser
 ****************/
 
 // Define a character constructor for the VN scenes
-function VN_Character (name) {
+function VN_Character (name, b_clr, f_clr) {
   this.name = name;
-  this.poses = {
-    'empty': ''
-  };
-  this.current_pose = 'empty';
+  this.border_color = b_clr;
+  this.fill_color = f_clr;
 
   // Best practices mean that we don't access object properties directly
   this.get_name = function () {
     return this.name;
   };
 
-  this.add_pose = function (key, img) {
-    // TO DO(?): Fix guard clause functionality
+  this.get_border_color = function () {
+    return this.border_color;
+  }
 
-    // // Guard clause - make sure the input is actually an image
-    // if (img.constructor.name != 'p5.Image') {
-    //   console.error('ERROR: Atttempted to add a pose to character ' + this.name + ' except it wasn\'t of type p5.Image.');
-    // }
-
-    this.poses[key] = img;
-  };
-
-  this.set_pose = function (pose) {
-    // Check first to see if the request pose actually exists in the character's list of poses
-    if (pose in this.poses) {
-      // TO DO: See if this functionality works or if you're supposed to use the .hasOwn() method instead
-      this.current_pose = pose;
-    } else {
-      this.current_pose = 'empty';
-      console.warn('WARNING: Attempted to set pose of character ' + this.name + ' to a pose that doesn\'t exist. Setting pose to EMPTY.');
-    }
-  };
-
-  this.display = function (x, y, side) {
-    // Guard clause - draw nothing if the pose is empty
-    if (this.current_pose == 'empty') {
-      return;
-    }
-
-    push();
-    translate(x, y);
-    imageMode(CENTER);
-
-    // Flip the character pose if on the right hand side
-    if (side == 'RIGHT') {
-      scale(-1, 1);
-    } else if (side != 'LEFT') {
-      console.error('ERROR: Attempted to draw character ' + this.name + ' on non-existing side of screen.');
-    }
-
-    // Draw the current pose at the trans'd origin
-    image(this.poses[this.current_pose], 0, 0);
-
-    pop();
-  };
+  this.get_fill_color = function () {
+    return this.fill_color;
+  }
 }
-
-// The empty character, for initializing a scene
-const VN_EMPTY_CHARACTER = new VN_Character('');
 
 //-------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -180,8 +138,7 @@ function VN_Button_Panel (name, clr = 'CYAN') {
 // Define a scene constructor
 //  -- For legibility, properties and methods related to parser functionality are offloaded to file `vn_parser.js`
 function VN_Scene (name, x, y, w, h, p, tb_h) {
-  this.name = name;     // For debugging purposes, so as to report to console which scene broke
-  this.background = () => {}; // Bg's are fxn's so that we can either have procedurally gen'd bg's or just a static image, at our choosing
+  this.name = name;       // For debugging purposes, so as to report to console which scene broke
   
   // Properties for position of scene on screen, other elements in scene
   this.x = x;
@@ -190,18 +147,14 @@ function VN_Scene (name, x, y, w, h, p, tb_h) {
   this.height = h;
   this.padding = p;
   this.textbox_height = tb_h;
+
+  // Properties for what images we can display to the screen
+  this.images = [];
+  this.current_img = '';
   
   // Properties for characters associated to the scene
-  this.characters = {
-    empty: VN_EMPTY_CHARACTER
-  };
-  this.active_speakers = {
-    // Initialize default characters as the empty character
-    left: this.characters.empty,
-    right: this.characters.empty
-  };
-  this.speaker = 'NARRATOR';       // Can be either 'LEFT', 'RIGHT', 'NARRATOR', or 'NONE'
-  this.characters_visible = false; // Presume scene starts with exposition before someone speaks - hence this and the previous line
+  this.characters = [];
+  this.speaker = 'NARRATOR';       // Can be either a key in `this.characters` or the string 'NARRATOR'
 
   // Properties for dialogue displayed to screen
   this.dialogue = '';
@@ -213,74 +166,45 @@ function VN_Scene (name, x, y, w, h, p, tb_h) {
     return this.name;
   };
 
-  this.set_background = function (bg) {
-    if (typeof bg != 'function') {
-      console.error('ERROR: Attempted to assign a non-function as the background to ' + this.scene);
+  // TO DO: Write comment
+  this.add_image = function (im, key) {
+    this.images[key] = im;
+  }
+
+  this.set_image = function (key) {
+    // Make sure input is actually one of the images we have available
+    if (key in this.images) {
+      this.current_img = this.images[key];
+    } else {
+      console.error('ERROR: Attempted to display image with key `' + key + '` for scene ' + this.name + ' except key wasn\'t found in the scene\'s list of images.');
     }
-    this.background = bg;
   };
 
-  this.add_character = function (char) {
+  // TO DO: Write comment
+  this.add_character = function (char, key) {
     // Guard clause - make sure the input is actually a character
     if (char.constructor.name != 'VN_Character') {
       console.error('ERROR: Atttempted to add a character to scene ' + this.name + ' except it wasn\'t actually of type VN_Character.');
       return;
     }
 
-    // Use the name of the character as the key for the key-value character array
-    let key = char.get_name();
-
     // Warn when character name conflict occurs
     if (key in this.characters) {
-      console.warn('WARNING: Character name conflict for name ' + key + ' in scene ' + this.name + '. Overriding pre-existing character.');
+      console.warn('WARNING: Character name conflict for key `' + key + '` in scene ' + this.name + '. Overriding pre-existing character.');
     }
 
     this.characters[key] = char;
   };
 
-  this.set_character_pose = function (key, pose) {
+  // TO DO: Write comment
+  this.set_speaker = function (key) {
     if (key in this.characters) {
-      this.characters[key].set_pose(pose);
+      this.speaker = this.characters[key];
+    } else if (key == 'NARRATOR') {
+      this.speaker = 'NARRATOR';
     } else {
-      console.error('ERROR: Character ' + key + ' not found for scene ' + this.name);
+      console.error('ERROR: Character with key `' + key + '` not found in scene ' + this.name + '.');
     }
-  };
-
-  // Designate if the character on the LEFT, the character on the RIGHT, or the NARRATOR is going to speak
-  this.set_speaker = function (side) {
-    if (side == 'LEFT' || side == 'RIGHT' || side == 'NARRATOR') {
-      this.speaker = side;
-    } else {
-      // Default case
-      this.speaker = 'NONE';
-      console.warn('WARNING: Speaker of scene ' + this.name + ' set to NONE.');
-    }
-  };
-
-  // Assign a character from this.characters to either the LEFT or RIGHT side of the screen
-  this.set_active_speaker_slot = function (key, side) {
-    // First check to make sure the requested character is actually in the array of characters
-    if (key in this.characters) {
-      // Then make sure the given side is actually a valid side of the scene
-      if (side == 'LEFT') {
-        this.active_speakers.left = this.characters[key];
-      } else if (side == 'RIGHT') {
-        this.active_speakers.right = this.characters[key];
-      } else {
-        console.error('ERROR: Attempted to assign a character to non-existing side of scene ' + this.name);
-      }
-    } else {
-      console.error('ERROR: Character ' + key + ' not found for scene ' + this.name);
-    }
-  };
-
-  // A pair of function for when you want to hide characters during a cutaway or return them thereafter
-  this.show_characters = function () {
-    this.characters_visible = true;
-  };
-
-  this.hide_characters = function () {
-    this.characters_visible = false;
   };
 
   // Methods for handling the textbox
@@ -312,15 +236,12 @@ function VN_Scene (name, x, y, w, h, p, tb_h) {
       return true;
     }
   };
-  
-  // Resets all the active speakers and dialogue and stuff to the defaults.
-  this.clear_all = function () {
-    this.set_speaker('NARRATOR');
-    this.set_active_speaker_slot('empty', 'LEFT');
-    this.set_active_speaker_slot('empty', 'RIGHT');
+
+  this.clear = function () {
+    this.current_img = '';
+    this.speaker = 'NARRATOR';
     this.set_dialogue('');
-    this.hide_characters();
-  };
+  }
 
   // Draw the scene!!
   //  -- Characters are drawn at center line, dividing the screen into thirds.
@@ -328,13 +249,15 @@ function VN_Scene (name, x, y, w, h, p, tb_h) {
     push();
     translate(this.x, this.y);
 
-    // Draw background image
-    this.background(); // TO DO: See about adding functionality for passing in optional args for this fxn
-
-    // Draw the characters
-    if (this.characters_visible) {
-      this.active_speakers.left.display(this.width/3, this.height/2, 'LEFT'); // space characters at thirds
-      this.active_speakers.right.display(2/3 * this.width, this.height/2, 'RIGHT');
+    // Draw image for scene
+    if (this.current_img == '') {
+      // In case no image is set, draw a black background
+      push();
+      fill(255);
+      rect(0, 0, this.width, this.height);
+      pop();
+    } else {
+      image(this.current_img, 0, 0);
     }
 
     // Draw the textbox
@@ -365,43 +288,31 @@ function VN_Scene (name, x, y, w, h, p, tb_h) {
     // Display additional characters each time .display() is called
     dg_text = this.dialogue.substring(0, this.dialogue.length - this.dg_char_counter);
 
-    // Draw text and namebox if applicable
+    // Set text to italic or draw namebox where applicable,m then print dialogue to screen
     if (this.speaker == 'NARRATOR') {
       textStyle(ITALIC);
       text(dg_text, this.padding, textbox_y + 2 * this.padding, this.width - 2 * this.padding);
     }
-    else if (this.speaker == 'LEFT')
+    else
     {
-      // Draw text on left side of screen
-      text(dg_text, this.padding, textbox_y + 2 * this.padding, 2/3 * this.width - 2 * this.padding);
+      // Get color of namebox from the character
+      let border_color = this.speaker.get_border_color();
+      let fill_color = this.speaker.get_fill_color();
 
       // Draw the namebox
-      fill(60, 210, 255);
-      stroke(35, 185, 250);
+      stroke(border_color);
       strokeWeight(3);
-      rect(this.padding, textbox_y - this.padding, textWidth(this.active_speakers.left.get_name()) + 2 * this.padding, 2 * this.padding);
+      fill(fill_color);
+      rect(this.padding, textbox_y - this.padding, textWidth(this.speaker.get_name()) + 2 * this.padding, 2 * this.padding);
 
+      // Draw the name in the namebox
       fill(0);
       noStroke();
       textAlign(LEFT, CENTER);
-      text(this.active_speakers.left.get_name(), 2 * this.padding, 2/3 * this.height);
-    }
-    else if (this.speaker == 'RIGHT')
-    {
-      // Draw text on right side of screen
-      textAlign(RIGHT);
-      text(dg_text, 1/3 * this.width + this.padding, textbox_y + 2 * this.padding, 2/3 * this.width - 2 * this.padding);
+      text(this.speaker.get_name(), 2 * this.padding, 2/3 * this.height);
 
-      // Draw the namebox
-      fill(255, 210, 60);   // TO DO: Add custom color functionality by assigning color to VN_Character
-      stroke(250, 185, 35);
-      strokeWeight(3);
-      rect(this.width - this.padding, textbox_y - this.padding, -textWidth(this.active_speakers.right.get_name()) - 2 * this.padding, 2 * this.padding);
-
-      fill(0);
-      noStroke();
-      textAlign(RIGHT, CENTER);
-      text(this.active_speakers.right.get_name(), this.width - 2 * this.padding, 2/3 * this.height);
+      // Print dialogue to screen, slightly below the namebox
+      text(dg_text, this.padding, textbox_y + 3 * this.padding, this.width - 2 * this.padding);
     }
 
     pop();

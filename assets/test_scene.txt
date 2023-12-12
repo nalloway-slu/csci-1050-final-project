@@ -1,23 +1,10 @@
-bg bg_incr_gray
-add testee
-add testee_2
 speed 1
 pause
 
-slot testee LEFT
-slot testee_2 RIGHT
-speaker LEFT
-show
-
-pose testee 1
-pose testee_2 1
-
+speaker testee
 say help me
 
-speaker RIGHT
-pose testee 2
-pose testee_2 2
-
+speaker testee_2
 say Have you considered helping yourself here? Huh? Have you?
 
 speaker NARRATOR
@@ -26,17 +13,21 @@ say oh no.... how rude....
 options butt can_butts
 say what should they do?
 
-if butt 2 goto 35
+if butt 2 goto 24
+# start of option 1
 say so you picked option 1, huh?
 
 say how's that treating you so far? you likin' it?
-goto 40
+# end of option 1
+goto 30
 
 # start of option 2
 say so you picked option 2, huh?
 
 say i think there may have been a better choice here...
+# end of option 2
 
+# rejoin after split options
 exec say_result_of_butts
 pause
 

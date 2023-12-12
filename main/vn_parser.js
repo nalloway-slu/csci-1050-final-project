@@ -4,20 +4,10 @@ vn_parser.js - Defines how to interpret text files in `assets` folder containing
 To expedite the writing process, we invent a language and write a parser 
 
 List of keywords, ordered by appearance in the definition of the VN_Scene constructor (see vn_objects.js):
-  bg <func>
-   -- Sets the background to the function <func> as found in global variable VN_List_Of_Backgrounds (see vn_handler.js)
-  add <char>
-   -- Adds to the scene the character <char> as found in global variable VN_List_Of_Characters
-  pose <char> <pose>
-   -- Sets the pose of character <char> to <pose>
-  speaker <side>
-   -- Sets whether the character on the 'LEFT', the character on the 'RIGHT', or the 'NARRATOR' is speaking (or 'NONE')
-  slot <char> <side>
-   -- Assigns character <char> to the given <side> of the screen
-  show
-   -- Shows all the characters
-  hide
-   -- Hides all the characters
+  img <key>
+   -- Sets the image for the scene to be the this.
+  speaker <key|NARRATOR>
+   -- Sets the current speaker to be either `this.characters[key]` or the string 'NARRATOR'
   say <msg>
    -- Sets the displayed dialogue to <msg>
   say_nothing
@@ -25,8 +15,7 @@ List of keywords, ordered by appearance in the definition of the VN_Scene constr
   speed <speed>
    -- Sets the character scroll speed to be <speed> characters per frame
   clear
-   -- Resets scene to default settings, in particular setting the speaker to 'NARRATOR', setting the on-screen characters to the
-      global empty character VN_EMPTY_CHARACTER, and toggling the scene to hide characters instead of show
+   -- Clears the scene image and dialogue
 
 The following keywords do NOT appear in VN_Scene:
   pause
@@ -49,9 +38,9 @@ Note on the <char> parameter: If the character's name has spaces, replace them w
 // TO DO CONTINUALLY: Update list of keywords as you expand functionality of VN_Scene
 
 // List of valid keywords accepted by the parser, in order of how many parameters they take
-const VN_PARSER_KEYWORDS_ZERO_PARAMS = ['show', 'hide', 'say_nothing', 'clear', 'pause', '#'];
-const VN_PARSER_KEYWORDS_ONE_PARAMS  = ['bg', 'add', 'speaker', 'say', 'speed', 'exec', 'goto'];
-const VN_PARSER_KEYWORDS_TWO_PARAMS  = ['pose', 'slot', 'options'];
+const VN_PARSER_KEYWORDS_ZERO_PARAMS = ['say_nothing', 'clear', 'pause', '#'];
+const VN_PARSER_KEYWORDS_ONE_PARAMS  = ['im', 'speaker', 'say', 'speed', 'exec', 'goto'];
+const VN_PARSER_KEYWORDS_TWO_PARAMS  = ['options'];
 const VN_PARSER_KEYWORDS_MANY_PARAMS = ['if'];
 
 VN_Scene.prototype.assign_instruction_set = function (instructions) {
@@ -70,6 +59,10 @@ VN_Scene.prototype.get_instructions_length = function () {
 // instruction, then we return either `if` if the if-condition fails, or the value of the next index to look at if the
 // if-condition holds. If method fails to execute for some reason, it returns 'error'. Lastly, if the instruction is just
 // empty, then we do nothing and return 'empty'.
+
+// TO DO: Revise documentation note above
+
+
 VN_Scene.prototype.execute_instruction = function (index) {
   // Guard clause - do nothing if index is out of range of instruction set
   if (index >= this.inst_length) {
@@ -99,17 +92,11 @@ VN_Scene.prototype.execute_instruction = function (index) {
   if (VN_PARSER_KEYWORDS_ZERO_PARAMS.indexOf(first_word) > -1) {
     // The above line returns true iff the initial keyword is in the array VN_PARSER_KEYWORDS_ZERO_PARAMS (see previous comment on .indexOf())
     switch (first_word) {
-      case 'show':
-        this.show_characters();
-        break;
-      case 'hide':
-        this.hide_characters();
-        break;
       case 'say_nothing':
         this.set_dialogue('');
         break;
       case 'clear':
-        this.clear_all();
+        this.clear();
         break;
       case 'pause':
       case '#':
@@ -136,18 +123,8 @@ VN_Scene.prototype.execute_instruction = function (index) {
       let cmd = instruction.split(' ', 2);
       let param = cmd[1];
       switch (first_word) {
-        // See vn_handler.js for the global variables VN_List_Of_Backgrounds/Characters
-        case 'bg':
-          // TO DO: Make sure param is in array
-          this.set_background(VN_List_Of_Backgrounds[param]);
-          break;
-        case 'add':
-          // TO DO: Make sure param is in array
-
-          // Since character names may contain spaces, we're changing any underscores written in the
-          // instructions document into spaces.
-          param = param.replaceAll('_', ' ');
-          this.add_character(VN_List_Of_Characters[param]);
+        case 'img':
+          this.set_image(param);
           break;
         case 'speaker':
           this.set_speaker(param);
@@ -158,6 +135,7 @@ VN_Scene.prototype.execute_instruction = function (index) {
           break;
         case 'exec':
           // TO DO: Make sure param is in array
+          // TO DO: Write comment involving vn_globals.js
           VN_List_Of_Special_Functions[param]();
           break;
         case 'goto':
@@ -186,18 +164,6 @@ VN_Scene.prototype.execute_instruction = function (index) {
     let param1 = cmd[1];
     let param2 = cmd[2];
     switch (first_word) {
-      case 'pose':
-        // Since character names may contain spaces, we're changing any underscores written in the
-        // instructions document into spaces.
-        param1 = param1.replaceAll('_', ' ');
-        this.set_character_pose(param1, param2);
-        break;
-      case 'slot':
-        // Since character names may contain spaces, we're changing any underscores written in the
-        // instructions document into spaces.
-        param1 = param1.replaceAll('_', ' ');
-        this.set_active_speaker_slot(param1, param2);
-        break;
       case 'options':
         // TO DO: Check to make sure param1 is a flag, param2 is a button panel, &c.
         return {
