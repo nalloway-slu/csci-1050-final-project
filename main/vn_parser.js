@@ -8,6 +8,10 @@ List of keywords, ordered by appearance in the definition of the VN_Scene constr
    -- Sets the image for the scene to be the this.
   speaker <key|NARRATOR>
    -- Sets the current speaker to be either `this.characters[key]` or the string 'NARRATOR'
+  speaker_is_thinking
+   -- Set the upcoming dialogue to be printed to screen as thinking instead of talking aloud
+  speaker_is_speaking
+   -- Set the upcoming dialogue to be printed to screen as talking aloud
   say <msg>
    -- Sets the displayed dialogue to <msg>
   say_nothing
@@ -38,7 +42,7 @@ Note on the <char> parameter: If the character's name has spaces, replace them w
 // TO DO CONTINUALLY: Update list of keywords as you expand functionality of VN_Scene
 
 // List of valid keywords accepted by the parser, in order of how many parameters they take
-const VN_PARSER_KEYWORDS_ZERO_PARAMS = ['say_nothing', 'clear', 'pause', '#'];
+const VN_PARSER_KEYWORDS_ZERO_PARAMS = ['speaker_is_thinking', 'speaker_is_speaking', 'say_nothing', 'clear', 'pause', '#'];
 const VN_PARSER_KEYWORDS_ONE_PARAMS  = ['im', 'speaker', 'say', 'speed', 'exec', 'goto'];
 const VN_PARSER_KEYWORDS_TWO_PARAMS  = ['options'];
 const VN_PARSER_KEYWORDS_MANY_PARAMS = ['if'];
@@ -92,6 +96,12 @@ VN_Scene.prototype.execute_instruction = function (index) {
   if (VN_PARSER_KEYWORDS_ZERO_PARAMS.indexOf(first_word) > -1) {
     // The above line returns true iff the initial keyword is in the array VN_PARSER_KEYWORDS_ZERO_PARAMS (see previous comment on .indexOf())
     switch (first_word) {
+      case 'speaker_is_thinking':
+        this.speaker_is_thinking();
+        break;
+      case 'speaker_is_speaking':
+        this.speaker_is_speaking();
+        break;
       case 'say_nothing':
         this.set_dialogue('');
         break;

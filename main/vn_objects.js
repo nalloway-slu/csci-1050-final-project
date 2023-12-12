@@ -90,7 +90,6 @@ function VN_Button (txt, val, x, y, w, h, clr) {
     } else {
       return false;
     }
-    // TO DO: Figure out how to have a clicking animation
   };
 }
 
@@ -154,7 +153,8 @@ function VN_Scene (name, x, y, w, h, p, tb_h) {
   
   // Properties for characters associated to the scene
   this.characters = [];
-  this.speaker = 'NARRATOR';       // Can be either a key in `this.characters` or the string 'NARRATOR'
+  this.speaker = 'NARRATOR'; // Can be either a key in `this.characters` or the string 'NARRATOR'
+  this.is_thinking = false;  // Display dialogue differently if it's a character thinking vs them speaking aloud
 
   // Properties for dialogue displayed to screen
   this.dialogue = '';
@@ -180,7 +180,7 @@ function VN_Scene (name, x, y, w, h, p, tb_h) {
     }
   };
 
-  // TO DO: Write comment
+  // Add a character to the list of the characters for the scene, to be accessed by other methods via the given `key`
   this.add_character = function (char, key) {
     // Guard clause - make sure the input is actually a character
     if (char.constructor.name != 'VN_Character') {
@@ -196,7 +196,7 @@ function VN_Scene (name, x, y, w, h, p, tb_h) {
     this.characters[key] = char;
   };
 
-  // TO DO: Write comment
+  // Set who is going to speak the upcoming piece of dialogue
   this.set_speaker = function (key) {
     if (key in this.characters) {
       this.speaker = this.characters[key];
@@ -205,6 +205,15 @@ function VN_Scene (name, x, y, w, h, p, tb_h) {
     } else {
       console.error('ERROR: Character with key `' + key + '` not found in scene ' + this.name + '.');
     }
+  };
+
+  // A pair of methods for switching when a character is thinking in their head versus speaking aloud
+  this.speaker_is_thinking = function () {
+    this.is_thinking = true;
+  };
+
+  this.speaker_is_speaking = function () {
+    this.is_thinking = false;
   };
 
   // Methods for handling the textbox
@@ -251,9 +260,10 @@ function VN_Scene (name, x, y, w, h, p, tb_h) {
 
     // Draw image for scene
     if (this.current_img == '') {
-      // In case no image is set, draw a black background
+      // In case no image is set, draw a blank background
       push();
-      fill(255);
+      fill(20);
+      noStroke();
       rect(0, 0, this.width, this.height);
       pop();
     } else {
@@ -288,7 +298,7 @@ function VN_Scene (name, x, y, w, h, p, tb_h) {
     // Display additional characters each time .display() is called
     dg_text = this.dialogue.substring(0, this.dialogue.length - this.dg_char_counter);
 
-    // Set text to italic or draw namebox where applicable,m then print dialogue to screen
+    // Set text to italic or draw namebox where applicable, then print dialogue to screen
     if (this.speaker == 'NARRATOR') {
       textStyle(ITALIC);
       text(dg_text, this.padding, textbox_y + 2 * this.padding, this.width - 2 * this.padding);
@@ -310,6 +320,13 @@ function VN_Scene (name, x, y, w, h, p, tb_h) {
       noStroke();
       textAlign(LEFT, CENTER);
       text(this.speaker.get_name(), 2 * this.padding, 2/3 * this.height);
+
+      // Set dialogue to italic and write in blue color if the speaker is thinking inside their head instead of talking aloud
+      //  -- Yes, I stole the blue color from Ace Attorney, deal with it
+      if (this.is_thinking) {
+        textStyle(ITALIC);
+        fill('TEAL');
+      }
 
       // Print dialogue to screen, slightly below the namebox
       text(dg_text, this.padding, textbox_y + 3 * this.padding, this.width - 2 * this.padding);

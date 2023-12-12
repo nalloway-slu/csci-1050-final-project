@@ -41,8 +41,8 @@ function say_result_of_butts () {
 function preload() {
   can_scene = new VN_Scene('test', 2, 2, 596, 596, 10, 596/3); // TO DO: Explain params, this looks a bit opaque
 
-  can_char = new VN_Character('testee', color(0, 200, 200), color(0, 240, 240));
-  can_char2 = new VN_Character('testee 2', color(220, 160, 30), color(255, 200, 40));
+  can_char = new VN_Character('testee', color(0, 200, 200), color(0, 240, 240));      // namebox color is teal
+  can_char2 = new VN_Character('testee 2', color(220, 160, 30), color(255, 200, 40)); // namebox color is orange
 
   can_scene.add_character(can_char, 'testee');
   can_scene.add_character(can_char2, 'testee_2');
@@ -79,6 +79,11 @@ function draw() {
   if (VN_Is_Drawing_Options) {
     VN_Current_Options_Displayed.button_panel.display();
   }
+
+  push();
+  noFill();
+  rect(1, 1, width - 1, height - 1);
+  pop();
 }
 
 function vn_handle_interaction (scene) {

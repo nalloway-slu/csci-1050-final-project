@@ -7,19 +7,22 @@ say help me
 speaker testee_2
 say Have you considered helping yourself here? Huh? Have you?
 
-speaker NARRATOR
-say oh no.... how rude....
+speaker testee
+speaker_is_thinking
+say (oh no.... how rude....)
+speaker_is_speaking
 
+speaker NARRATOR
 options butt can_butts
 say what should they do?
 
-if butt 2 goto 24
+if butt 2 goto 27
 # start of option 1
 say so you picked option 1, huh?
 
 say how's that treating you so far? you likin' it?
 # end of option 1
-goto 30
+goto 33
 
 # start of option 2
 say so you picked option 2, huh?
