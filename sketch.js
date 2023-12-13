@@ -1,7 +1,7 @@
 /****************
 Final Project. 2023-12-13
 A CONVERSATION IN MADRID
-Nathaniel Alloway, CSCI 1050-01
+Nathaniel Balmoja Alloway, CSCI 1050-01
 
 Description: This is the code for a virtual novel (hereafter VN) in which I have a
   fictitious conversation with another person whilst on a walk through
@@ -12,7 +12,7 @@ Description: This is the code for a virtual novel (hereafter VN) in which I have
 Credits: Images and dialogue are wholly my own, excepting the quotation "ever-living forces",
   which is due to my intro philosophy professor Carlos Segovia. The discussion on Guattari's
   subjectivity diagram is also due to Carlos Segovia. The discussion on Heidegger's "dwelling"
-  fourfold is (yet again) in part due to Carlos Segovia, but most of it draws from a thread on
+  fourfold is (yet again) in part due to Carlos Segovia, but some of it also draws from a thread on
   the 'ma pona pi toki pona' Discord server created by @aardvark0825. The thread may be found at
   the given link:
     https://discord.com/channels/301377942062366741/1174566951553613834/1174570004079976468

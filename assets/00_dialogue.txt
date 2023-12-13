@@ -4,10 +4,10 @@ speaker NARRATOR
 say A CONVERSATION IN MADRID.
 
 img opening_1
-say Dehesa de la Villa Park, Madrid, Spain. Spring 2023.
+say Dehesa de la Villa Park, Madrid, Spain. May 2023.
 
 img opening_2
-pause
+say_nothing
 
 img opening_3
 pause
@@ -803,3 +803,4 @@ img thanks_12
 pause
 
 clear
+say By Nathaniel Balmoja Alloway, 13 December 2023.
