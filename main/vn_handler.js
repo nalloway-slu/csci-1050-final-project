@@ -17,6 +17,7 @@ VN_Scene.prototype.get_current_inst_index = function () {
 }
 
 // Set the current index in for the scene's instruction set
+//  -- Good for debugging, but probably don't set this manually otherwise
 VN_Scene.prototype.set_current_inst_index = function (index) {
   // Guard clauses - make sure index is number within range of instruction set
   //  -- Note that internally a scene is allowed to have a `current_inst_index` out of the instruction set's range, which is
@@ -24,7 +25,7 @@ VN_Scene.prototype.set_current_inst_index = function (index) {
   if (typeof index != 'number') {
     console.error('ERROR: Attempted to change the current index for the instruction set of scene ' + this.name + 'but index given is not a number.');
     return;
-  } else if (!Number.isFinite(v) || v >= this.inst_length || v < 0) {
+  } else if (!Number.isFinite(index) || index >= this.inst_length || index < 0) {
     console.error('ERROR: Attempted to change the current index for the instruction set of scene ' + this.name + 'but index given is out of range.');
     return;
   }

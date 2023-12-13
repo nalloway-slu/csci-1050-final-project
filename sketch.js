@@ -38,7 +38,7 @@ let awkward = new Array(6);
 let cooler = new Array(13);
 let finals = new Array(4);
 let fourfold = new Array(11);
-let opening = new Array(11);
+let opening = new Array(10);
 let thanks = new Array(13);
 
 function preload() {
@@ -73,29 +73,85 @@ function preload() {
 let scene, natalia, nathaniel;
 
 // Define the necessary button panels
-let bp, bp2, bp3;
+let bp_awkward, bp_fourfold, bp_cooler;
+
+// Define parameters for the canvas
+//  -- Width given is the width of any image in the `assets` folder
+//  -- Height given is the height of any image in said folder, plus 150px for space for the textbox
+let c_width = 806;
+let im_height = 605;
+let c_height = im_height + 150;
 
 function setup() {
-  createCanvas(600, 600);
+  createCanvas(c_width, c_height);
+  frameRate(48);
   textFont('Courier New');
 
-  scene = new VN_Scene('cool and new scene', 1, 1, 598, 598, 10, 150);
+  // Initialize the scene
+  scene = new VN_Scene('cool and new scene', 1, 1, c_width - 2, c_height - 2, 10, 150);
 
-  natalia = new VN_Character('Natalia', color(0, 76, 101), color(30, 106, 131));
-  nathaniel = new VN_Character('Nathaniel', color(225, 104, 25), color(255, 134, 55));
+  // Add the images we just loaded in
+  for (let i = 0; i < awkward.length; i++) {
+    scene.add_image(awkward[i], 'awkward_' + i);
+  }
+
+  for (let i = 0; i < cooler.length; i++) {
+    scene.add_image(cooler[i], 'cooler_' + i);
+  }
+
+  for (let i = 0; i < finals.length; i++) {
+    scene.add_image(finals[i], 'finals_' + i);
+  }
+
+  for (let i = 0; i < fourfold.length; i++) {
+    scene.add_image(fourfold[i], 'fourfold_' + i);
+  }
+
+  for (let i = 0; i < opening.length; i++) {
+    scene.add_image(opening[i], 'opening_' + i);
+  }
+
+  for (let i = 0; i < thanks.length; i++) {
+    scene.add_image(thanks[i], 'thanks_' + i);
+  }
+
+  // Add characters
+  //  -- The given colors match the colors of the figures on the scene's images
+  let orange = color(255, 104, 25);
+  natalia = new VN_Character('Natalia', color(0, 76, 101), color(80, 156, 181));
+  nathaniel = new VN_Character('Nathaniel', orange, color(255, 184, 105));
 
   scene.add_character(natalia, 'Natalia');
   scene.add_character(nathaniel, 'Nathaniel');
 
-  // butts = new VN_Button_Panel();
-  // butts.add_button('Do something', 1, 300, 200, 100, 20);
-  // butts.add_button('Do nothing', 2, 300, 300, 100, 20);
+  // Define button panels
+  bp_awkward = new VN_Button_Panel(orange);
+  let awk_width = textWidth('Things have been getting') + 40; // get max width of buttons + padding
+  bp_awkward.add_button('Oh, no reason...', 1, c_width/2, 1/4 * im_height, awk_width, 20);
+  bp_awkward.add_button('Just checking on\nhow you’re doing...', 2, c_width/2, 2/4 * im_height, awk_width, 40);
+  bp_awkward.add_button('Things have been getting\nweird between us.', 3, c_width/2, 3/4 * im_height, awk_width, 40);
 
-  // scene.add_button_panel(butts, 'butts');
+  bp_fourfold = new VN_Button_Panel(orange);
+  let four_width = textWidth('Heidegger’s fourfold') + 40;
+  bp_fourfold.add_button('Guattari’s fourfold', 1, c_width/2, 1/3 * im_height, four_width, 20);
+  bp_fourfold.add_button('Heidegger’s fourfold', 2, c_width/2, 2/3 * im_height, four_width, 20);
 
-  lines.splice(0, 0, ''); // Prepend an empty command since text files are one-indexed instead of zero-indexed.
+  bp_cooler = new VN_Button_Panel(orange);
+  let cool_width = textWidth('Like you.') + 40;
+  bp_cooler.add_button('Like you.', 1, c_width/2, 1/3 * im_height, cool_width, 20);
+  bp_cooler.add_button('Like me.', 2, c_width/2, 2/3 * im_height, cool_width, 20);
 
+  // Add the button panels
+  scene.add_button_panel(bp_awkward, 'bp_awkward');
+  scene.add_button_panel(bp_fourfold, 'bp_fourfold');
+  scene.add_button_panel(bp_cooler, 'bp_cooler');
+
+  // Assign the instructions to the scene
+  lines.splice(0, 0, ''); // Prepend an empty string since text files are one-indexed in my editor instead of zero-indexed.
   scene.assign_instruction_set(lines);
+
+  scene.set_current_inst_index(351); // For debugging: Jump to first choice - 51 / second choice - 226 / third choice - 351
+
 }
 
 function draw() {
@@ -103,8 +159,15 @@ function draw() {
 }
 
 function mousePressed() {
+  // Don't do anything if we've run out of instructions
   if (scene.check_if_reached_end_of_instruction_set()) {
     return;
   }
-  scene.handle_interaction();
+
+  // Only do the interaction if clicking inside the canvas
+  let mouse_inside_canvas_x = (mouseX >= 0) && (mouseX < c_width);
+  let mouse_inside_canvas_y = (mouseY >= 0) && (mouseY < c_height);
+  if (mouse_inside_canvas_x && mouse_inside_canvas_y) {
+    scene.handle_interaction();
+  }
 }

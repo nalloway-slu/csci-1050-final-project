@@ -29,6 +29,8 @@ Scenes come equipped with a variety of methods. Several of these are handled by 
    -- Adds p5.Image object `im` to the scene's list of images under the given `key`
   .add_character(char, key)
    -- Adds VN_Character object `char` to the scene's list of characters under the given `key`
+  .set_char_speed(v)
+   -- Sets the number of characters of the dialogue to draw per frame to `v`
   .dialogue_not_finished()
    -- Returns true if the scene is still typing out dialogue to the screen (dialogue is printed characters as a time
       rather than all at once), and returns false otherwise.
@@ -243,7 +245,7 @@ function VN_Scene (name, x, y, w, h, p, tb_h) {
     }
   };
 
-  // Methods for handling the textbox
+  // Set dialogue to draw to screen
   this.set_dialogue = function (msg) {
     if (typeof msg != 'string') {
       console.error('ERROR: Attempted to assign a non-string as dialogue in scene ' + this.name + '. Assgining the empty string instead.');
@@ -253,6 +255,7 @@ function VN_Scene (name, x, y, w, h, p, tb_h) {
     this.dg_char_counter = msg.length;
   };
 
+  // Set the number of characters to display per frame
   this.set_char_speed = function (v) {
     if (typeof v != 'number') {
       console.error('ERROR: Attempted to assign a non-number as the character scroll speed in ' + this.name + '. Now using speed = 1.');
@@ -333,7 +336,7 @@ function VN_Scene (name, x, y, w, h, p, tb_h) {
     }
 
     // Draw the textbox
-    fill(235); // TO CONSIDER: Change the textbox color?
+    fill(235);
     stroke(255);
     strokeWeight(4);
 
@@ -381,11 +384,14 @@ function VN_Scene (name, x, y, w, h, p, tb_h) {
       // Draw the name in the namebox
       fill(0);
       noStroke();
+
+      push();
       textAlign(LEFT, CENTER);
       text(this.speaker.get_name(), 2 * this.padding, textbox_y);
+      pop();
 
-      // Print dialogue to screen, slightly below the namebox
-      text(dg_text, this.padding, textbox_y + 3 * this.padding, this.width - 2 * this.padding);
+      // Print dialogue to screen
+      text(dg_text, this.padding, textbox_y + 2 * this.padding, this.width - 2 * this.padding);
     }
 
     // If we need to display some dialogue choices, do so here
