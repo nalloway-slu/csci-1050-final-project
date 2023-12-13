@@ -41,6 +41,10 @@ them for a short story. That said, I think the composition for each of the photo
 passable.
 
 For details on the VN novel system itself, refer to the source code for documentation.
+**The intended output of the code** is a short linear-branching virtual novel (one ending, but multiple paths
+to get there) consisting of images and text, whose characters display to the screen one at a time. The program
+is controllable by either clicking on the canvas or by pressing the right arrow key, although the mouse
+is required for selecting dialogue options.
 
 ## Credits
 Images and dialogue are wholly my own, excepting the quotation "ever-living forces",
