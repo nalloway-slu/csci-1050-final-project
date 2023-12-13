@@ -14,6 +14,8 @@ List of keywords, ordered by appearance in the definition of the VN_Scene constr
    -- Sets the displayed dialogue to the empty string
   speed <speed>
    -- Sets the text character scroll speed to be <speed> characters per frame
+  options <button_panel> <flag>
+   -- Returns an object consisting of the key-value pairs `button_panel_key: <button_panel>` and `target_flag: <flag>`
   clear
    -- Clears the scene image and dialogue
 
@@ -24,8 +26,6 @@ The following keywords do NOT appear in VN_Scene:
    -- Functions identically to the `pause` command but is used for writing comments in the instructions document.
   goto <index>
    -- Returns <index> so that the handler knows to jump to that number line
-  options <flag> <button_panel>
-   -- Returns an object consisting of the key-value pairs `target_flag: <flag>` and `button_panel_key: <button_panel>`
   if <flag> <value> goto <index>
    -- If the value of the variable <flag> is <value>, then returns line number <line> so that the handler knows to jump there
 ****************/
@@ -153,10 +153,10 @@ VN_Scene.prototype.execute_instruction = function (index) {
     let param2 = cmd[2];
     switch (first_word) {
       case 'options':
-        // TO DO: Check to make sure param1 is a flag, param2 is a button panel, &c.
+        // TO DO: Check to make sure param1 is a button panel, param2 is a flag, &c.
         return {
-          target_flag: param1,
-          button_panel_key: param2
+          button_panel_key: param1,
+          target_flag: param2,
         };
       default:
         // Yet another impossible case we still have to cover

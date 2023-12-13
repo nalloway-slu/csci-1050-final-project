@@ -94,14 +94,9 @@ function VN_Button (txt, val, x, y, w, h, clr) {
 }
 
 // Then define a constructor for physically collating buttons together
-function VN_Button_Panel (name, clr = 'CYAN') {
-  this.name = name;
+function VN_Button_Panel (clr = 'CYAN') {
   this.color = clr;
   this.buttons = [];
-
-  this.get_name = function () {
-    return this.name;
-  }
 
   this.add_button = function (txt, val, x, y, w, h, clr2 = this.color) {
     this.buttons[val] = new VN_Button(txt, val, x, y, w, h, clr2);
@@ -168,20 +163,23 @@ function VN_Scene (name, x, y, w, h, p, tb_h) {
   this.current_options_displayed = '';
   this.current_flag = '';
 
-  // Begin methods
-  this.get_name = function () {
-    return this.name;
-  };
+  // Begin methods //
 
-  // TO DO: Write comment
+  // Add an image to the scene's list of available images
   this.add_image = function (im, key) {
+    // Guard clause - make sure given `key` is a non-empty string
+    if (typeof key != 'string' || key == '') {
+      console.error('ERROR: A key given when assigning image in scene ' + this.name + ' is not a non-empty string');
+      return;
+    }
     this.images[key] = im;
   }
 
+  // Set which image you want to display to screen
   this.set_image = function (key) {
     // Make sure input is actually one of the images we have available
     if (key in this.images) {
-      this.current_img = this.images[key];
+      this.current_img = key;
     } else {
       console.error('ERROR: Attempted to display image with key `' + key + '` for scene ' + this.name + ' except key wasn\'t found in the scene\'s list of images.');
     }
@@ -192,6 +190,12 @@ function VN_Scene (name, x, y, w, h, p, tb_h) {
     // Guard clause - make sure the input is actually a character
     if (char.constructor.name != 'VN_Character') {
       console.error('ERROR: Atttempted to add a character to scene ' + this.name + ' except it wasn\'t actually of type VN_Character.');
+      return;
+    }
+
+    // Guard clause - make sure given `key` is a non-empty string
+    if (typeof key != 'string' || key == '') {
+      console.error('ERROR: A key given when assigning character in scene ' + this.name + ' is not a non-empty string');
       return;
     }
 
@@ -244,6 +248,41 @@ function VN_Scene (name, x, y, w, h, p, tb_h) {
     }
   };
 
+  // Methods for setting/handling dialogue choices
+  this.add_button_panel = function (bp, key) {
+    // Guard clause - make sure input is of type VN_Button_Panel
+    if (bp.constructor.name != 'VN_Button_Panel') {
+      console.error('ERROR: Atttempted to add a button panel to scene ' + this.name + ' except it wasn\'t actually of type VN_Button_Panel.');
+      return;
+    }
+
+    // Guard clause - make sure given `key` is a non-empty string
+    if (typeof key != 'string' || key == '') {
+      console.error('ERROR: A key given when assigning button panel in scene ' + this.name + ' is not a non-empty string');
+      return;
+    }
+
+    this.button_panels[key] = bp;
+  };
+
+  this.set_dialogue_options = function (key, flag) {
+    // Make sure the given `key` is actually one of the button panels we have available
+    if (key in this.button_panels) {
+      this.is_displaying_options = true;
+      this.current_options_displayed = key;
+      this.current_flag = flag;
+    } else {
+      console.error('ERROR: Button panel with key `' + key + '` not found in scene ' + this.name + '.');
+    }
+  };
+
+  this.clear_dialogue_options = function () {
+    this.is_displaying_options = false;
+    this.current_options_displayed = '';
+    this.current_flag = '';
+  };
+
+  // Reset some properties to defaults
   this.clear = function () {
     this.current_img = '';
     this.speaker = 'NARRATOR';
@@ -265,7 +304,7 @@ function VN_Scene (name, x, y, w, h, p, tb_h) {
       rect(0, 0, this.width, this.height);
       pop();
     } else {
-      image(this.current_img, 0, 0);
+      image(this.images[this.current_img], 0, 0);
     }
 
     // Draw the textbox
@@ -322,6 +361,11 @@ function VN_Scene (name, x, y, w, h, p, tb_h) {
 
       // Print dialogue to screen, slightly below the namebox
       text(dg_text, this.padding, textbox_y + 3 * this.padding, this.width - 2 * this.padding);
+    }
+
+    // If we need to display some dialogue choices, do so here
+    if (this.is_displaying_options) {
+      // TO DO: implement
     }
 
     pop();

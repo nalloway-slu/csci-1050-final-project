@@ -39,10 +39,8 @@ VN_Scene.prototype.handle_interaction = function () {
       // Then set the value of the associated flag to the value of the selected button...
       this.flags[this.current_flag] = val;
 
-      // And stop drawing the buttons on the screen.
-      this.is_displaying_options = false;
-
-      // TO DO: Remove the thing at this.current_options_displayed
+      // And stop drawing the buttons on the screen
+      this.clear_dialogue_options();
     } else {
 
       // Otherwise, ignore the user input.
@@ -59,9 +57,7 @@ VN_Scene.prototype.handle_interaction = function () {
     // We've hit an `options` command, so we'll set up a dialogue choice here
     if (typeof tmp == 'object') {
       if ('target_flag' in tmp) {
-        this.is_displaying_options = true;
-        this.current_options_displayed = tmp.button_panel_key;
-        this.current_flag = tmp.target_flag;
+        this.set_dialogue_options(tmp.button_panel_key, tmp.target_flag);
       }
     }
 
