@@ -18,18 +18,18 @@ Credits: Images and dialogue are wholly my own, excepting the quotation "ever-li
     https://discord.com/channels/301377942062366741/1174566951553613834/1174570004079976468
 
 File directory:
-  index.html      - Where all the HTML happens
-  style.css       - Stylesheets for said HTML
-  sketch.js       - Main script file, loads all the assets and calls all the requisite functions [TO DO: Revise]
+  index.html        - Where all the HTML happens
+  style.css         - Stylesheets for said HTML
+  sketch.js         - Main script file, loads all the assets and calls all the requisite functions [TO DO: Revise]
   main
-  | vn_objects.js - Defines object constructors for characters, buttons, and scenes that are used for the VN
-  | vn_parser.js  - Defines how to interpret text files in `assets` folder containing VN scene dialogs and instructions
-  | vn_handler.js - Handles execution of instructions as parsed in `vn_parser.js` upon user input
+  | vn_objects.js   - Defines object constructors for characters, buttons, and scenes that are used for the VN
+  | vn_parser.js    - Defines how to interpret text files in `assets` folder containing VN scene dialogs and instructions
+  | vn_handler.js   - Handles execution of instructions as parsed in `vn_parser.js` upon user input
   assets
+  | 00_dialogue.txt - Instruction set for the VN
   | awkward_0.png
   |  ...
-  | thanks_12.png - Images displayed in the VN
-  | dialogue.txt  - Instruction set for the VN
+  | thanks_12.png   - Images displayed in the VN
 ****************/
 
 // Load in the images and the instruction set
@@ -42,30 +42,30 @@ let opening = new Array(11);
 let thanks = new Array(13);
 
 function preload() {
-  lines = loadStrings('assets/dialogue.txt');
+  lines = loadStrings('assets/00_dialogue.txt');
   
   for (let i = 0; i < awkward.length; i++) {
     awkward[i] = loadImage('assets/awkward_' + i + '.png');
   }
   
   for (let i = 0; i < cooler.length; i++) {
-    cooler[i] = loadImage('assets/cooler' + i + '.png');
+    cooler[i] = loadImage('assets/cooler_' + i + '.png');
   }
   
   for (let i = 0; i < finals.length; i++) {
-    finals[i] = loadImage('assets/finals' + i + '.png');
+    finals[i] = loadImage('assets/finals_' + i + '.png');
   }
   
   for (let i = 0; i < fourfold.length; i++) {
-    fourfold[i] = loadImage('assets/fourfold' + i + '.png');
+    fourfold[i] = loadImage('assets/fourfold_' + i + '.png');
   }
   
   for (let i = 0; i < opening.length; i++) {
-    opening[i] = loadImage('assets/open' + i + '.png');
+    opening[i] = loadImage('assets/open_' + i + '.png');
   }
   
   for (let i = 0; i < thanks.length; i++) {
-    thanks[i] = loadImage('assets/thanks' + i + '.png');
+    thanks[i] = loadImage('assets/thanks_' + i + '.png');
   }
 }
 

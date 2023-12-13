@@ -2,7 +2,8 @@
 vn_handler.js - Handles execution of instructions as parsed in `vn_parser.js` upon user input
 
 The .handle_interaction() method executes instructions from the scene's instruction set continuously
-  until it hits a `say` or `pause` command, at which point it stops execution.
+  until it hits a `say` or `pause` command, at which point it stops execution. Important, we note
+  that execution will STILL CONTINUE if the parser hits an error with one of its instructions!
 
 Included also are a few additional methods related to the index of instruction that's currently being handled.
 ****************/

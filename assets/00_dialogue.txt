@@ -1,0 +1,588 @@
+Opening scenes go here...
+
+Natalia
+Hey.
+
+Nathaniel
+Oh, hey. Didn’t see you come over.
+
+Natalia
+Some say I can just appear like that.
+
+Nathaniel
+I see.
+
+NARRATOR
+...
+
+NARRATOR
+...
+
+NARRATOR
+...
+
+Natalia
+So what was it you wanted to talk about?
+
+
+> Oh, no reason...
+
+Nathaniel
+Oh, no reason... Just figured, I dunno...
+
+Nathaniel
+...
+
+Nathaniel
+Sometimes, it’s just good to talk, y’know?
+
+Natalia
+Yeah, I hear ya.
+
+NARRATOR
+...
+
+NARRATOR
+...
+
+Natalia
+So have finals been going well for you?
+
+
+> Just checking on how you’re doing...
+
+Nathaniel
+Just checking on how you’re doing. I know it’s been a while since we’ve talked.
+
+Natalia
+Ah, gotcha. We’ll I’m doing fine as usual. You?
+
+Nathaniel
+Pretty well, I guess. Bit worried about finals, but who isn’t?
+
+
+
+Natalia
+Of course.
+
+
+Natalia
+How have they been going, anyway?
+
+
+> Things have been getting weird between us.
+
+Nathaniel
+Things have been getting weird between us.
+
+Natalia
+Oh? What do you mean?
+
+Nathaniel
+Like, I dunno. We haven’t talked much in a while. I’m just worried that something’s happening, that maybe you’ll think I’ve been avoiding you.
+
+Natalia
+Ah, I see.
+
+NARRATOR
+...
+
+Natalia
+I haven't felt like you've been avoiding me. I mean, from my end, I think it's just that we've all been getting kinda busy, especially with finals, right?
+
+Nathaniel
+Right, yeah.
+
+NARRATOR
+...
+
+NARRATOR
+...
+
+Natalia
+How have finals gone for you, anyway?
+
+
+REJOIN <
+
+Nathaniel
+Oh well, they've gone mostly as good as I could hope for.
+
+Natalia
+Knowing you, that’s probably pretty good.
+
+Nathaniel
+I think so, yeah, although... Been feeling kinda iffy with my Poli-Sci final.
+
+Natalia
+How so?
+
+Nathaniel
+Well actually it was more of an essay—
+
+Natalia
+—Oh, rough—
+
+Nathaniel
+—But it is what it is. Got something out the door.
+
+Natalia
+You haven’t talked to me much about your political science class, actually. Have you been liking it?
+
+Nathaniel
+It’s been fine, it’s just...
+
+Nathaniel
+Could never really get myself into it.
+
+Nathaniel
+That’s not to say that I didn’t enjoy the class. Had a great professor, nice guy. And I found the material important.
+
+Nathaniel
+It was just... Hard to wrap my head around? I couldn't get a lot of it, and I think a lot of that's because I don't really have much experience talking about international politics, but...
+
+Nathaniel
+Y'know, what matters is that I grappled with the material anyway, since it was important.
+
+Natalia
+Right.
+
+Nathaniel
+My philosophy final, though... I think that went a lot smoother?
+
+Natalia
+You have an easier time with philosophy than political science?
+
+Nathaniel
+Kinda, yeah, I guess? I mean, in some cases I think philosophy was harder to understand than Poli-Sci.
+
+Nathaniel
+But, I enjoyed it. Was interesting hearing about all these weird and wacky concepts. And so many fourfolds...
+
+Natalia
+Fourfolds?
+
+Nathaniel
+Yeah, like uh...
+
+
+> With Guattari
+
+Nathaniel
+... with Guattari’s functors for subjectivity.
+
+Nathaniel
+You've got like, four different functors, each mapping out a different part of how one's identity can start to change.
+
+Nathaniel
+You've got F, for flows of desire.
+
+Nathaniel
+Then Phi, for “phyla,” or sets of knowledge.
+
+
+
+Nathaniel
+And then U, for universes of value. So think like, I dunno, integrity or patience.
+
+Natalia
+I know patience is something we both wish we had.
+
+Nathaniel
+Agreed.
+
+Nathaniel
+But yeah, lastly we have T for existential territories. That’s the places and behaviors that you constantly inhabit and experience.
+
+Nathaniel
+So when a person has certain desires flow through them, they can use the knowledge they have...
+
+Nathaniel
+...and the values they’ve come to develop...
+
+Nathaniel
+...to change what sorts of “rhythms” they inhabit, what kinds of habits they have and behaviors they do. So they shift their territories.
+
+Natalia
+Sounds complicated.
+
+Nathaniel
+Yeah, and I think that was only the dumbed-down version our professor gave us, not the full thing.
+
+
+> With Heidegger
+
+Nathaniel
+...with Heidegger’s “dwelling” fourfold.
+
+Nathaniel
+You’ve got like, four different elements when it comes to the human experience.
+
+Nathaniel
+There’s the earth, the material nature we inhabit and coexist with.
+
+Nathaniel
+Then there’s the sky above everything, with the weather and the day and night.
+
+Nathaniel
+Then there’s the immortals: the sacred, or as my professor would likely put it, the “ever-living forces“ that shape the earth.
+
+Nathaniel
+And lastly you’ve got us, the mortals, who live together in companionship, who live together constantly confronted with their death.
+
+Natalia
+That last one sounds a bit morbid.
+
+Nathaniel
+Well yeah, but we *will* all die, yeah? And in being confronted with our death, we continue to find the drive to keep living life while we can.
+
+Natalia
+Hm...
+
+Nathaniel
+At least, I think that’s how that works.
+
+
+REJOIN <
+
+Nathaniel
+I don't really get it that well, to be honest.
+
+Natalia
+I mean, I don’t think most people get philosophy, either.
+
+Nathaniel
+Yeah, but I think that stuff’s kinda important.
+
+Natalia
+Well, it’s like what you said with Poli-Sci earlier... You “grappled with it“ ’cus you found it important, and now you continue to “grapple with“ this stuff as you keep on learning.
+
+Nathaniel
+Right, yeah...
+
+NARRATOR
+...
+
+NARRATOR
+...
+
+Nathaniel
+There’s a bunch of other stuff that I don’t really understand.
+
+Natalia
+Yeah, like what?
+
+
+> Like you.
+
+Nathaniel
+Like you, I guess.
+
+Natalia
+Oh?
+
+If `weird` was the option picked at the start...
+
+Natalia
+This doesn’t have to do with, like, “things being weird“ as you mentioned earlier, right?
+
+Nathaniel
+No, I don’t think... At least I don’t think so.
+
+Natalia
+...
+
+Nathaniel
+Well, it’s mostly me being weird, I suppose.
+
+Natalia
+Oh.
+
+Either way, continue with...
+
+Nathaniel
+It’s just, I dunno...
+
+Nathaniel
+I always think you’re so cool.
+
+Natalia (staring)
+...
+
+Nathaniel
+You’re like an enigma to me. You always seem so effortless in what you do.
+
+Natalia
+...
+
+Nathaniel
+And I know it’s really unfair of me to say that. I *know* you put in so much effort to be able to do the things you do, be who you are...
+
+Natalia
+I do put a lot of effort into this.
+
+Nathaniel
+Yeah... But me knowing something is not the same thing as me *feeling* something, *perceiving* something.
+
+Nathaniel
+...
+
+Nathaniel
+I just wish I could be as cool as you are.
+
+Natalia
+I think you’re cool.
+
+Nathaniel
+...
+
+Natalia
+You do a lotta weird maths. I don’t know how you do that—
+
+Nathaniel
+—Sometimes I don’t even know myself—
+
+Natalia
+—But yeah, exactly. You do something, it appears easy, but we both know it isn’t.
+
+Nathaniel
+Mm.
+
+NARRATOR
+...
+
+NARRATOR
+...
+
+Nathaniel
+There’s also me, I guess.
+
+Nathaniel
+I mean, yeah, I *can* do a lot of maths, and I think of myself as a mathematician...
+
+Nathaniel
+But sometimes I think to myself that maybe it’d be better if I switched?
+
+Natalia
+Switch majors, you mean?
+
+Nathaniel
+Yeah. Like, do philosophy instead. Or at least do more of it. I dunno.
+
+Nathaniel
+It’s like, at one point I think I know my interests, but at another I’m no longer sure.
+
+Natalia
+Hm...
+
+
+> Like myself.
+
+Nathaniel
+Like myself, I guess.
+
+Natalia
+What do you mean?
+
+Nathaniel
+I mean, I thought I was gonna be a mathematician when I grew up.
+
+Nathaniel
+Well no, at first I thought I was gonna be an engineer. But then I decided on maths in high school.
+
+Nathaniel
+But now I’m thinking... With all this philosophy stuff, maybe it’d be better if I switched?
+
+Natalia
+Switch majors, you mean?
+
+Nathaniel
+Yeah. Or at least, do more philosophy and stuff. I dunno.
+
+Nathaniel
+At one point I think I know my interests, at another I’m no longer sure.
+
+Natalia
+Hm...
+
+NARRATOR
+...
+
+NARRATOR
+...
+
+Nathaniel
+And then there’s you.
+
+Natalia
+What about me?
+
+Nathaniel
+I mean, sometimes you just seem like an enigma to me. You just seem so cool. Everything you do looks so effortless.
+
+Natalia (staring)
+...
+
+Nathaniel
+And I know it’s really unfair of me to say that. I *know* you put in so much effort to be able to do the things you do, be who you are...
+
+Natalia
+I do put a lot of effort into this.
+
+Nathaniel
+Yeah... But me knowing something is not the same thing as me *feeling* something, *perceiving* something.
+
+Nathaniel
+...
+
+Nathaniel
+I just wish I could be as cool as you are.
+
+Natalia
+I think you’re cool.
+
+Nathaniel
+...
+
+Natalia
+You do a lotta weird maths. I don’t know how you do that—
+
+Nathaniel
+—Sometimes I don’t even know myself—
+
+Natalia
+—But yeah, exactly. You do something, it appears easy, but we both know it isn’t.
+
+Nathaniel
+Mm.
+
+
+REJOIN <
+
+NARRATOR
+...
+
+NARRATOR
+...
+
+Natalia
+All this personal talk...
+
+Natalia
+You’re always one to over-intellectualize these sorts of things, I think.
+
+Nathaniel
+I can see that.
+
+Natalia
+But like, it’s the same sort of principle you were talking about before, right?
+
+Natalia
+You don’t know something, so you “grapple with” it, you wrestle with it. ’Cus it’s important.
+
+Nathaniel
+Right, yeah.
+
+Natalia
+Just the same way with your studies, you gotta grapple with understanding yourself.
+
+Natalia
+And maybe there’s a bit more discomfort here since you’re trying to understand a topic that’s much more personal.
+
+Nathaniel
+Mm...
+
+Natalia
+But you gotta sit with that discomfort. It takes effort. But I know you can do it.
+
+NARRATOR
+...
+
+NARRATOR
+...
+
+If Guattari was chosen earlier...
+
+Natalia
+It’s like with what you said about Guattari. You gotta expand those “phyla” or whatever. You gotta explore your values.
+
+Natalia
+Then you can shift your territories. Become someone else, bit by bit.
+
+Natalia
+Try being closer to the person you want to be. Then you’ll realize you were always “cool” all along.
+
+Nathaniel
+...
+
+If instead Heidegger was chosen...
+
+Natalia
+It’s like with what you said about Heidegger. We’re all mortals. We all gotta face our death.
+
+Natalia
+So we may as well face our life as well. If there’s something you want to discover or change about yourself, you gotta try it out now while you can.
+
+Natalia
+And you’ve got other mortals too that you can share your experiences with.
+
+Nathaniel
+...
+
+Just the same, rejoin here.
+
+Nathaniel
+Yeah, maybe you’re right.
+
+Nathaniel
+...
+
+Nathaniel
+No, no, you’re definitely right. I oughtta start doing something. Start exploring.
+
+Natalia
+Yeah. All it takes is some practice.
+
+Natalia (arm cupping cheek)
+And a bit of self-kindness.
+
+NARRATOR
+...
+
+NARRATOR
+...
+
+NARRATOR
+...
+
+Nathaniel
+It’s been good talking with you.
+
+Natalia
+Mm.
+
+Nathaniel
+I appreciate how much you’ve been helping me.
+
+Natalia
+I’ll always be here to do that.
+
+Nathaniel
+It’s just, I’m sorry I’ve mostly been talking about my own concerns. I know you’ve probably got your own worries to deal with.
+
+Natalia
+No, no, it’s fine...
+
+Natalia
+...
+
+Natalia
+Well, in way, we both got to talk about our own worries.
+
+Natalia
+We are the same person, after all.
+
+Nathaniel
+Right...
+
+Closing scenes go here...
