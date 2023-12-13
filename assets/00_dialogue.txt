@@ -1,10 +1,10 @@
 # Opening sequence - gravel knoll
 img opening_0
 speaker NARRATOR
-say Dehesa de la Villa Park, Madrid, Spain. Spring 2023.
+say A CONVERSATION IN MADRID.
 
 img opening_1
-say_nothing
+say Dehesa de la Villa Park, Madrid, Spain. Spring 2023.
 
 img opening_2
 pause
@@ -277,7 +277,6 @@ goto 320
 
 
 
-
 # Option 2: With Heidegger
 say ...with Heidegger’s “dwelling” fourfold.
 
@@ -396,6 +395,7 @@ img cooler_7
 speaker Natalia
 say Oh.
 # End of side-line
+
 
 
 
@@ -790,7 +790,7 @@ say ...
 
 say ...
 
-say Or at least I wish we were.
+say Or at least, I wish we were.
 
 img thanks_10
 speaker NARRATOR
