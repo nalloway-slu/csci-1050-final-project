@@ -15,9 +15,15 @@ VN_Scene.prototype.get_current_inst_index = function () {
 }
 
 // TO DO: Write comment
+VN_Scene.prototype.check_if_reached_end_of_instruction_set = function () {
+  return (this.current_inst_index >= this.inst_length);
+}
+
+// TO DO: Write comment
 VN_Scene.prototype.handle_interaction = function () {
   // Don't do anything if we've run out of lines in the instruction set
   if (this.current_inst_index >= this.inst_length) {
+    console.error('ERROR: Attempted to handle an interaction but already reached end of instruction set.');
     return;
   }
 
@@ -31,7 +37,7 @@ VN_Scene.prototype.handle_interaction = function () {
   if (this.is_displaying_options) {
 
     // Then get the value of the button selected by the user if there is a button, otherwise set to false.
-    let val = this.button_panels[this.current_options_displayed].return_interaction();
+    let val = this.current_options_displayed.return_interaction();
 
     // If the user *has* selected a button, i.e. we have not set to false in the last step...
     if (val != false) {
@@ -51,7 +57,7 @@ VN_Scene.prototype.handle_interaction = function () {
   // Now execute lines in the parser's instruction set until we hit a specific command.
   let tmp = '';
   while (true) {
-    tmp = this.execute_instruction(VN_Line_Counter);
+    tmp = this.execute_instruction(this.current_inst_index);
     this.current_inst_index++;
 
     // We've hit an `options` command, so we'll set up a dialogue choice here
@@ -68,6 +74,11 @@ VN_Scene.prototype.handle_interaction = function () {
 
     // Pause execution if we hit `say` or `pause`
     if (tmp == 'say' || tmp == 'pause') {
+      break;
+    }
+
+    // Break if we've reached the end of the instruction set
+    if (this.current_inst_index >= this.inst_length) {
       break;
     }
   }

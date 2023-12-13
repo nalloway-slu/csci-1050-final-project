@@ -179,7 +179,7 @@ function VN_Scene (name, x, y, w, h, p, tb_h) {
   this.set_image = function (key) {
     // Make sure input is actually one of the images we have available
     if (key in this.images) {
-      this.current_img = key;
+      this.current_img = this.images[key];
     } else {
       console.error('ERROR: Attempted to display image with key `' + key + '` for scene ' + this.name + ' except key wasn\'t found in the scene\'s list of images.');
     }
@@ -269,7 +269,7 @@ function VN_Scene (name, x, y, w, h, p, tb_h) {
     // Make sure the given `key` is actually one of the button panels we have available
     if (key in this.button_panels) {
       this.is_displaying_options = true;
-      this.current_options_displayed = key;
+      this.current_options_displayed = this.button_panels[key];
       this.current_flag = flag;
     } else {
       console.error('ERROR: Button panel with key `' + key + '` not found in scene ' + this.name + '.');
@@ -304,7 +304,7 @@ function VN_Scene (name, x, y, w, h, p, tb_h) {
       rect(0, 0, this.width, this.height);
       pop();
     } else {
-      image(this.images[this.current_img], 0, 0);
+      image(this.current_img, 0, 0);
     }
 
     // Draw the textbox
@@ -357,7 +357,7 @@ function VN_Scene (name, x, y, w, h, p, tb_h) {
       fill(0);
       noStroke();
       textAlign(LEFT, CENTER);
-      text(this.speaker.get_name(), 2 * this.padding, 2/3 * this.height);
+      text(this.speaker.get_name(), 2 * this.padding, textbox_y);
 
       // Print dialogue to screen, slightly below the namebox
       text(dg_text, this.padding, textbox_y + 3 * this.padding, this.width - 2 * this.padding);
@@ -365,7 +365,7 @@ function VN_Scene (name, x, y, w, h, p, tb_h) {
 
     // If we need to display some dialogue choices, do so here
     if (this.is_displaying_options) {
-      // TO DO: implement
+      this.current_options_displayed.display();
     }
 
     pop();

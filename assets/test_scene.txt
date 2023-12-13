@@ -1,0 +1,36 @@
+speed 1
+
+speaker testee
+say help me
+
+speaker testee_2
+say Have you considered helping yourself here? Huh? Have you?
+
+speaker NARRATOR
+say oh no.... how rude....
+
+options butts butt
+say what should they do?
+
+if butt 2 goto 26
+# start of option 1
+say so you picked option 1, huh?
+
+say how's that treating you so far? you likin' it?
+
+say You picked option 1 and we were all the better for it.
+# end of option 1
+goto 34
+
+# start of option 2
+say so you picked option 2, huh?
+
+say i think there may have been a better choice here...
+
+say You picked option 2 and we were all the worse for it.
+# end of option 2
+
+# rejoin after split options
+pause
+
+clear

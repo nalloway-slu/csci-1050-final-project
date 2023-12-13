@@ -41,10 +41,6 @@ VN_Scene.prototype.assign_instruction_set = function (instructions) {
   this.inst_length = instructions.length;
 };
 
-VN_Scene.prototype.get_instructions_length = function () {
-  return this.inst_length;
-};
-
 // This method executes an instruction and returns the type of instruction performed, except for a few cases: If the
 // method executes an `options` command, then it returns an object containing a VN_Button_Panel object and the name of
 // a flag whose value will be set by the user selecting one of the buttons on the button panel. If the method executes
@@ -60,7 +56,7 @@ VN_Scene.prototype.execute_instruction = function (index) {
   // Guard clause - do nothing if index is out of range of instruction set
   if (index >= this.inst_length) {
     console.error('ERROR: Attempted to execute instruction at line ' + index + ' for scene ' + this.name + ', but index was out of range.');
-    return;
+    return 'error';
   }
 
   // Get rid of leading/ending whitespace if there be any

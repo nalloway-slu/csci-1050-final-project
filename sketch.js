@@ -18,28 +18,44 @@ File directory:
   | 
 ****************/
 
+let lines;
+
 function preload() {
-  
+  lines = loadStrings('assets/test_scene.txt');
 }
+
+let scene, testee, testee_2, butts;
 
 function setup() {
   createCanvas(600, 600);
   textFont('Courier New');
 
-  // lines.splice(0, 0, ''); // Prepend an empty command since text files are one-indexed instead of zero-indexed.
+  scene = new VN_Scene('cool and new scene', 1, 1, 598, 598, 10, 150);
+
+  testee = new VN_Character('Testee', color('RED'), color(255, 200, 200));
+  testee_2 = new VN_Character('Testee 2', color('CYAN'), color(200, 255, 255));
+
+  scene.add_character(testee, 'testee');
+  scene.add_character(testee_2, 'testee_2');
+
+  butts = new VN_Button_Panel();
+  butts.add_button('Do something', 1, 300, 200, 100, 20);
+  butts.add_button('Do nothing', 2, 300, 300, 100, 20);
+
+  scene.add_button_panel(butts, 'butts');
+
+  lines.splice(0, 0, ''); // Prepend an empty command since text files are one-indexed instead of zero-indexed.
+
+  scene.assign_instruction_set(lines);
 }
 
 function draw() {
-  
+  scene.display();
 }
 
-// Global variables for storing any dialogue choices or other options to the user, along with
-// whether we're displaying any options and the result of user decisions
-let VN_Current_Options_Displayed = '';
-let VN_Is_Drawing_Options = false;
-let VN_Option_Return_Value = false;
-let VN_Line_Counter = 1;
-
 function mousePressed() {
-  // an_scene.handle_interaction();
+  if (scene.check_if_reached_end_of_instruction_set()) {
+    return;
+  }
+  scene.handle_interaction();
 }
