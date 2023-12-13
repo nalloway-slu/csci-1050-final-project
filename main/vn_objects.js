@@ -161,6 +161,13 @@ function VN_Scene (name, x, y, w, h, p, tb_h) {
   this.dg_char_speed = 1;   // Characters to display per frame
   this.dg_char_counter = 0; // For tracking how many characters left needed to display to screen
 
+  // Properties for any button panels/dialogue choices displayed to screen
+  this.button_panels = [];
+  this.flags = [];
+  this.is_displaying_options = false;
+  this.current_options_displayed = '';
+  this.current_flag = '';
+
   // Begin methods
   this.get_name = function () {
     return this.name;

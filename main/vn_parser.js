@@ -26,12 +26,10 @@ The following keywords do NOT appear in VN_Scene:
    -- Does nothing
   #
    -- Functions identically to the `pause` command but is used for writing comments in the instructions document.
-  exec <func>
-   -- Executes special function <func> from VN_List_Of_Special_Functions
   goto <index>
    -- Returns <index> so that the handler knows to jump to that number line
   options <flag> <button_panel>
-   -- Returns an object consisting of the key-value pairs `target_flag: <flag>` and `button_panel: VN_List_Of_Button_Panels[<button_panel>]`
+   -- Returns an object consisting of the key-value pairs `target_flag: <flag>` and `button_panel_key: <button_panel>`
   if <flag> <value> goto <index>
    -- If the value of the variable <flag> is <value>, then returns line number <line> so that the handler knows to jump there
 ****************/
@@ -138,11 +136,6 @@ VN_Scene.prototype.execute_instruction = function (index) {
           param = parseInt(param);
           this.set_char_speed(param);
           break;
-        case 'exec':
-          // TO DO: Make sure param is in array
-          // TO DO: Write comment involving vn_globals.js
-          VN_List_Of_Special_Functions[param]();
-          break;
         case 'goto':
           // Remember that parameters in the instruction file are strings, so we have to convert to number first
           param = parseInt(param);
@@ -173,7 +166,7 @@ VN_Scene.prototype.execute_instruction = function (index) {
         // TO DO: Check to make sure param1 is a flag, param2 is a button panel, &c.
         return {
           target_flag: param1,
-          button_panel: VN_List_Of_Button_Panels[param2]
+          button_panel_key: param2
         };
       default:
         // Yet another impossible case we still have to cover
@@ -190,12 +183,12 @@ VN_Scene.prototype.execute_instruction = function (index) {
         //     We specify including the `goto` keyword for the `if` command just to aid readability when looking at the
         //     scene instruction files.
         let cmd = instruction.split(' ', 5);
-        let flag = cmd[1];
+        let key = cmd[1];
         let val = parseInt(cmd[2]);       // Remember that parameters in the instruction
         let goto_index = parseInt(cmd[4]); // file are strings, so we have to convert them to numbers.
 
         // Recall that for the `if` instruction, the function could return the goto-index instead of the instruction keyword.
-        if (VN_List_Of_Flags[flag] == val) {
+        if (this.flags[key] == val) {
           return goto_index;
         }
         break;
