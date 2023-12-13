@@ -349,8 +349,6 @@ function VN_Scene (name, x, y, w, h, p, tb_h) {
     // Display text characters of the dialogue incrementally
     let dg_text;
 
-    // TO DO: Add audio functionality
-
     // Decrease the dialogue-output-counter every frame that we call the .display() method
     if (this.dg_char_counter > 0) {
       this.dg_char_counter -= this.dg_char_speed;
