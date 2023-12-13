@@ -23,7 +23,7 @@ VNs could correspond to different objects. In the end, I had to cut back my ambi
 code and the writing, so we've ended up with what we have right now.
 
 Here is a diagram of my original VN system plan:
-![Chalkboard diagram describing potential structure for virtual novel system in p5.js. A scene is constructed via two characters who face one another and dialogue text along the bottom. Elements of the scene are controllable by a text file read by a parser, which then executes commands that modify the scene. Both the parser and the scene display are managed by some interaction handler.](diagram.heif)
+![Chalkboard diagram describing potential structure for virtual novel system in p5.js. A scene is constructed via two characters who face one another and dialogue text along the bottom. Elements of the scene are controllable by a text file read by a parser, which then executes commands that modify the scene. Both the parser and the scene display are managed by some interaction handler.](diagram.png)
 
 The objectives of the current project are twofold:
 - Develop a system for writing virtual novels in p5.js.
