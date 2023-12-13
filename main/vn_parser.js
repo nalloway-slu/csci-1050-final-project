@@ -173,10 +173,8 @@ VN_Scene.prototype.execute_instruction = function (index) {
         //     scene instruction files.
         let cmd = instruction.split(' ', 5);
         let key = cmd[1];
-        let val = cmd[2];       // Remember that parameters in the instruction
-        let goto_index = parseInt(cmd[4]); // file are strings, so we have to convert them to numbers.
-
-        console.log('if ' + key + ' ' + val + ' goto ' + goto_index);
+        let val = cmd[2];                  // Remember that parameters in the instruction
+        let goto_index = parseInt(cmd[4]); // files are strings, so we have to convert them to numbers.
 
         // Recall that for the `if` instruction, the function could return the goto-index instead of the instruction keyword.
         if (this.flags[key] == val) {

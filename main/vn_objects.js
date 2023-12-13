@@ -107,7 +107,7 @@ function VN_Button (txt, val, x, y, w, h, clr) {
   this.return_interaction = function () {
     // Guard clause - ignore any non-mouse interactions
     if (!mouseIsPressed) {
-      return;
+      return false;
     }
 
     let within_bounds_x = (mouseX >= this.x - this.width/2) && (mouseX <= this.x + this.width/2);
@@ -142,9 +142,8 @@ function VN_Button_Panel (clr = 'CYAN') {
     let result = false;
 
     for (let key in this.buttons) {
-      // We need strict inequality here so that JS doesn't try to coerce a `0` to `false` or something like that.
       let tmp = this.buttons[key].return_interaction();
-      if (tmp !== false) {
+      if (tmp != false) {
         result = tmp;
         break;
       }
