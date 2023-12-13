@@ -16,6 +16,8 @@ Credits: Images and dialogue are wholly my own, excepting the quotation "ever-li
   the 'ma pona pi toki pona' Discord server created by @aardvark0825. The thread may be found at
   the given link:
     https://discord.com/channels/301377942062366741/1174566951553613834/1174570004079976468
+  The code for centering the p5 canvas was taken from this link:
+    https://github.com/processing/p5.js/wiki/Positioning-your-canvas#centering-the-sketch-on-the-page-with-css
 
 File directory:
   index.html        - Where all the HTML happens
