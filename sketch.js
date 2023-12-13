@@ -41,5 +41,5 @@ let VN_Option_Return_Value = false;
 let VN_Line_Counter = 1;
 
 function mousePressed() {
-  can_scene.handle_interaction();
+  // an_scene.handle_interaction();
 }

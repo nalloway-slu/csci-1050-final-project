@@ -154,7 +154,6 @@ function VN_Scene (name, x, y, w, h, p, tb_h) {
   // Properties for characters associated to the scene
   this.characters = [];
   this.speaker = 'NARRATOR'; // Can be either a key in `this.characters` or the string 'NARRATOR'
-  this.is_thinking = false;  // Display dialogue differently if it's a character thinking vs them speaking aloud
 
   // Properties for dialogue displayed to screen
   this.dialogue = '';
@@ -212,15 +211,6 @@ function VN_Scene (name, x, y, w, h, p, tb_h) {
     } else {
       console.error('ERROR: Character with key `' + key + '` not found in scene ' + this.name + '.');
     }
-  };
-
-  // A pair of methods for switching when a character is thinking in their head versus speaking aloud
-  this.speaker_is_thinking = function () {
-    this.is_thinking = true;
-  };
-
-  this.speaker_is_speaking = function () {
-    this.is_thinking = false;
   };
 
   // Methods for handling the textbox
@@ -327,13 +317,6 @@ function VN_Scene (name, x, y, w, h, p, tb_h) {
       noStroke();
       textAlign(LEFT, CENTER);
       text(this.speaker.get_name(), 2 * this.padding, 2/3 * this.height);
-
-      // Set dialogue to italic and write in blue color if the speaker is thinking inside their head instead of talking aloud
-      //  -- Yes, I stole the blue color from Ace Attorney, deal with it
-      if (this.is_thinking) {
-        textStyle(ITALIC);
-        fill('TEAL');
-      }
 
       // Print dialogue to screen, slightly below the namebox
       text(dg_text, this.padding, textbox_y + 3 * this.padding, this.width - 2 * this.padding);

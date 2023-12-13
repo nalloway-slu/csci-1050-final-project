@@ -35,8 +35,8 @@ The following keywords do NOT appear in VN_Scene:
 ****************/
 
 // List of valid keywords accepted by the parser, in order of how many parameters they take
-const VN_PARSER_KEYWORDS_ZERO_PARAMS = ['speaker_is_thinking', 'speaker_is_speaking', 'say_nothing', 'clear', 'pause', '#'];
-const VN_PARSER_KEYWORDS_ONE_PARAMS  = ['img', 'speaker', 'say', 'speed', 'exec', 'goto'];
+const VN_PARSER_KEYWORDS_ZERO_PARAMS = ['say_nothing', 'clear', 'pause', '#'];
+const VN_PARSER_KEYWORDS_ONE_PARAMS  = ['img', 'speaker', 'say', 'speed', 'goto'];
 const VN_PARSER_KEYWORDS_TWO_PARAMS  = ['options'];
 const VN_PARSER_KEYWORDS_MANY_PARAMS = ['if'];
 
@@ -89,12 +89,6 @@ VN_Scene.prototype.execute_instruction = function (index) {
   if (VN_PARSER_KEYWORDS_ZERO_PARAMS.indexOf(first_word) > -1) {
     // The above line returns true iff the initial keyword is in the array VN_PARSER_KEYWORDS_ZERO_PARAMS (see previous comment on .indexOf())
     switch (first_word) {
-      case 'speaker_is_thinking':
-        this.speaker_is_thinking();
-        break;
-      case 'speaker_is_speaking':
-        this.speaker_is_speaking();
-        break;
       case 'say_nothing':
         this.set_dialogue('');
         break;
