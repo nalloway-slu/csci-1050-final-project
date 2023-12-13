@@ -1,25 +1,43 @@
 /****************
-vn_handler.js - TO DO: Documentation
+vn_handler.js - Handles execution of instructions as parsed in `vn_parser.js` upon user input
 
+The .handle_interaction() method executes instructions from the scene's instruction set continuously
+  until it hits a `say` or `pause` command, at which point it stops execution.
 
-
-end documentation
+Included also are a few additional methods related to the index of instruction that's currently being handled.
 ****************/
 
-// TO DO: Write comment
+// Stores the current index that we're looking at in the scene's instruction set
 VN_Scene.prototype.current_inst_index = 0;
 
-// TO DO: Write comment
+// Get the current index, if desired
 VN_Scene.prototype.get_current_inst_index = function () {
   return this.current_inst_index;
 }
 
-// TO DO: Write comment
+// Set the current index in for the scene's instruction set
+VN_Scene.prototype.set_current_inst_index = function (index) {
+  // Guard clauses - make sure index is number within range of instruction set
+  //  -- Note that internally a scene is allowed to have a `current_inst_index` out of the instruction set's range, which is
+  //     how we check for when we've run out of instructions
+  if (typeof index != 'number') {
+    console.error('ERROR: Attempted to change the current index for the instruction set of scene ' + this.name + 'but index given is not a number.');
+    return;
+  } else if (!Number.isFinite(v) || v >= this.inst_length || v < 0) {
+    console.error('ERROR: Attempted to change the current index for the instruction set of scene ' + this.name + 'but index given is out of range.');
+    return;
+  }
+  this.current_inst_index = index;
+}
+
+// Returns true if we've run out of instructions, false otherwise
 VN_Scene.prototype.check_if_reached_end_of_instruction_set = function () {
   return (this.current_inst_index >= this.inst_length);
 }
 
-// TO DO: Write comment
+// This method handles user interaction with the scene. This method does nothing if the user attempts to interact
+// while the scene is still displaying dialogue. It also does nothing if there are dialogue choices displayed, but
+// the user does not click on any of the buttons whilst interacting.
 VN_Scene.prototype.handle_interaction = function () {
   // Don't do anything if we've run out of lines in the instruction set
   if (this.current_inst_index >= this.inst_length) {

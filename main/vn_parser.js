@@ -5,7 +5,7 @@ To expedite the writing process, we invent a language and write a parser for it:
 
 List of keywords, ordered by appearance in the definition of the VN_Scene constructor (see vn_objects.js):
   img <key>
-   -- Sets the image for the scene to be the this.
+   -- Sets the image for the scene to be the image with the given <key> in the scene's list of images.
   speaker <key|NARRATOR>
    -- Sets the current speaker to be either `this.characters[key]` or the string 'NARRATOR'
   say <msg>
@@ -36,22 +36,26 @@ const VN_PARSER_KEYWORDS_ONE_PARAMS  = ['img', 'speaker', 'say', 'speed', 'goto'
 const VN_PARSER_KEYWORDS_TWO_PARAMS  = ['options'];
 const VN_PARSER_KEYWORDS_MANY_PARAMS = ['if'];
 
+// By default, a scene comes equipped with no instructions
+VN_Scene.prototype.instructions = [];
+VN_Scene.prototype.inst_length = 0;
+
 VN_Scene.prototype.assign_instruction_set = function (instructions) {
+  // Warn if an instruction set has already been assigned
+  if (this.inst_length > 0) {
+    console.warn('WARNING: Instruction set has already been assigned to scene ' + this.name + ', but overriding anyway.');
+  }
   this.instructions = instructions;
   this.inst_length = instructions.length;
 };
 
 // This method executes an instruction and returns the type of instruction performed, except for a few cases: If the
-// method executes an `options` command, then it returns an object containing a VN_Button_Panel object and the name of
-// a flag whose value will be set by the user selecting one of the buttons on the button panel. If the method executes
-// a `goto` instruction, then it returns the value of the next index to look at. Similarly, if the method executes an `if`
-// instruction, then we return either `if` if the if-condition fails, or the value of the next index to look at if the
-// if-condition holds. If method fails to execute for some reason, it returns 'error'. Lastly, if the instruction is just
-// empty, then we do nothing and return 'empty'.
-
-// TO DO: Revise documentation note above
-
-
+// method executes an `options` command, then it returns the name of a flag and a button panel such that when the user
+// selects one of the buttons on the button panel, its associated value become the value of the flag. If the method executes
+// a `goto` instruction, then it returns the value of the index of the next instruction to look at. Similarly, if the method
+// executes an `if` instruction, then we return either `if` if the if-condition fails, or the value of the next index to look
+// at if the if-condition holds. If method fails to execute for some reason, it returns 'error'. Lastly, if the instruction is
+// just empty, then we do nothing and return 'empty'.
 VN_Scene.prototype.execute_instruction = function (index) {
   // Guard clause - do nothing if index is out of range of instruction set
   if (index >= this.inst_length) {
@@ -149,7 +153,6 @@ VN_Scene.prototype.execute_instruction = function (index) {
     let param2 = cmd[2];
     switch (first_word) {
       case 'options':
-        // TO DO: Check to make sure param1 is a button panel, param2 is a flag, &c.
         return {
           button_panel_key: param1,
           target_flag: param2,

@@ -1,21 +1,41 @@
 /****************
 vn_objects.js - Defines object constructors for characters, buttons, and scenes that are used for the VN
 
-Create a character using `new VN_Character(name)`, where `name` is the name of the character.
-The `name` parmater will be used by the VN_Scene object to display in the on-screen namebox.
-The character stores poses, which are key-value pairs consisting of the name of the pose and a p5.Image object
-  containing an image of the character.
-Use add_pose() to add poses to the character, and use set_pose() to change the displayed pose.
-The display() method takes parameters `x` and `y` for the position of the pose on screen and an optional
-  paramter `side` which determines whether to reflect the character pose or not. (If `side == 'RIGHT'`, then
-  we presume the character is to be displayed on the right side of the screen, and hence we reflec them so that
-  they face left.)
+Define a character using `new VN_Character(name, b_clr, f_clr)`, where `name` is the name of the character,
+  `b_clr` is the color of the border of the namebox drawn on the screen when the character is speaking,
+  and `f_clr` is the fill color of said namebox.
 
-Create a scene using `new VN_Scene(name, bg)`, where `name` is the name of the scene, which we use to record
-  error messages using console.error(), and `bg` is a function that draws the background scenery of the scene.
+Define a button panel using `new VN_Button_Panel()`. You may pass in an optional argument containing the
+  default color of the buttons to display to screen.
 
-TO DO: Finish rest of documentation!
-TO DO: Write note about parser
+To assign buttons to a button panel, use the .add_button() method. You DO NOT NEED to use the VN_Button
+  constructor directly, but I won't stop you if you do.
+    Using .add_button(txt, val, x, y, w, h, [clr2]):
+      txt     - text to display on the button
+      val     - value associated to the button (the value a flag will be set to if this button is clicked)
+      x/y/w/h - position/width/height
+      clr2    - optional argument, sets a specific color of the button other than the button panel's default color
+
+Define a scene using `new VN_Scene(name, x, y, w, h, p, tb_h)`, where `name` is the name of the scene (used for
+  debugging purposes), `x/y/w/h` are the position/width/height, `p` is the padding on any text elements, and
+  `tb_h` is the height of the textbox.
+
+Scenes come equipped with a variety of methods. Several of these are handled by the scene parser
+  (see `vn_parser.js`), and so these are not usually called by hand. (But as before, I won't stop you if you
+  do call any of the scene methods by hand.) Hence, we document only the methods that are likely to be used
+  by hand below:
+
+  .add_image(im, key)
+   -- Adds p5.Image object `im` to the scene's list of images under the given `key`
+  .add_character(char, key)
+   -- Adds VN_Character object `char` to the scene's list of characters under the given `key`
+  .dialogue_not_finished()
+   -- Returns true if the scene is still typing out dialogue to the screen (dialogue is printed characters as a time
+      rather than all at once), and returns false otherwise.
+  .add_button_panel(bp, key)
+   -- Adds VN_Button_Panel object `bp` to the scene's list of button panels under the given `key`
+  .display()
+   -- Draws the scene onto the canvas
 ****************/
 
 // Define a character constructor for the VN scenes
@@ -83,6 +103,11 @@ function VN_Button (txt, val, x, y, w, h, clr) {
   };
 
   this.return_interaction = function () {
+    // Guard clause - ignore any non-mouse interactions
+    if (!mouseIsPressed) {
+      return;
+    }
+
     let within_bounds_x = (mouseX >= this.x - this.width/2) && (mouseX <= this.x + this.width/2);
     let within_bounds_y = (mouseY >= this.y - this.height/2) && (mouseY <= this.y + this.height/2);
     if (within_bounds_x && within_bounds_y) {
@@ -133,7 +158,7 @@ function VN_Button_Panel (clr = 'CYAN') {
 //  -- For modularization, properties/methods related to parser functionality are offloaded to file `vn_parser.js`
 //     and properties/methods related to handling user interaction are offloaded to file `vn_handler.js`
 function VN_Scene (name, x, y, w, h, p, tb_h) {
-  this.name = name;       // For debugging purposes, so as to report to console which scene broke
+  this.name = name; // For debugging purposes, so as to report to console which scene broke
   
   // Properties for position of scene on screen, other elements in scene
   this.x = x;
