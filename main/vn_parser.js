@@ -8,10 +8,6 @@ List of keywords, ordered by appearance in the definition of the VN_Scene constr
    -- Sets the image for the scene to be the this.
   speaker <key|NARRATOR>
    -- Sets the current speaker to be either `this.characters[key]` or the string 'NARRATOR'
-  speaker_is_thinking
-   -- Set the upcoming dialogue to be printed to screen as thinking instead of talking aloud
-  speaker_is_speaking
-   -- Set the upcoming dialogue to be printed to screen as talking aloud
   say <msg>
    -- Sets the displayed dialogue to <msg>
   say_nothing
