@@ -32,13 +32,48 @@ File directory:
   | dialogue.txt  - Instruction set for the VN
 ****************/
 
+// Load in the images and the instruction set
 let lines;
+let awkward = new Array(6);
+let cooler = new Array(13);
+let finals = new Array(4);
+let fourfold = new Array(11);
+let opening = new Array(11);
+let thanks = new Array(13);
 
 function preload() {
-  lines = loadStrings('assets/test_scene.txt');
+  lines = loadStrings('assets/dialogue.txt');
+  
+  for (let i = 0; i < awkward.length; i++) {
+    awkward[i] = loadImage('assets/awkward_' + i + '.png');
+  }
+  
+  for (let i = 0; i < cooler.length; i++) {
+    cooler[i] = loadImage('assets/cooler' + i + '.png');
+  }
+  
+  for (let i = 0; i < finals.length; i++) {
+    finals[i] = loadImage('assets/finals' + i + '.png');
+  }
+  
+  for (let i = 0; i < fourfold.length; i++) {
+    fourfold[i] = loadImage('assets/fourfold' + i + '.png');
+  }
+  
+  for (let i = 0; i < opening.length; i++) {
+    opening[i] = loadImage('assets/open' + i + '.png');
+  }
+  
+  for (let i = 0; i < thanks.length; i++) {
+    thanks[i] = loadImage('assets/thanks' + i + '.png');
+  }
 }
 
-let scene, testee, testee_2, butts;
+// Define the scene and the characters
+let scene, natalia, nathaniel;
+
+// Define the necessary button panels
+let bp, bp2, bp3;
 
 function setup() {
   createCanvas(600, 600);
@@ -46,17 +81,17 @@ function setup() {
 
   scene = new VN_Scene('cool and new scene', 1, 1, 598, 598, 10, 150);
 
-  testee = new VN_Character('Testee', color('RED'), color(255, 200, 200));
-  testee_2 = new VN_Character('Testee 2', color('CYAN'), color(200, 255, 255));
+  natalia = new VN_Character('Natalia', color(0, 76, 101), color(30, 106, 131));
+  nathaniel = new VN_Character('Nathaniel', color(225, 104, 25), color(255, 134, 55));
 
-  scene.add_character(testee, 'testee');
-  scene.add_character(testee_2, 'testee_2');
+  scene.add_character(natalia, 'Natalia');
+  scene.add_character(nathaniel, 'Nathaniel');
 
-  butts = new VN_Button_Panel();
-  butts.add_button('Do something', 1, 300, 200, 100, 20);
-  butts.add_button('Do nothing', 2, 300, 300, 100, 20);
+  // butts = new VN_Button_Panel();
+  // butts.add_button('Do something', 1, 300, 200, 100, 20);
+  // butts.add_button('Do nothing', 2, 300, 300, 100, 20);
 
-  scene.add_button_panel(butts, 'butts');
+  // scene.add_button_panel(butts, 'butts');
 
   lines.splice(0, 0, ''); // Prepend an empty command since text files are one-indexed instead of zero-indexed.
 
