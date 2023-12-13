@@ -31,7 +31,7 @@ say Oh, hey. Didn’t see you come over.
 
 img opening_8
 speaker Natalia
-say Some say I can just appear like that.
+say People have told me that I can just appear like that.
 
 speaker Nathaniel
 say I see.
@@ -480,7 +480,7 @@ speaker NARRATOR
 say ...
 
 img cooler_4
-say_nothing
+say ...
 
 img cooler_6
 speaker Nathaniel
@@ -552,7 +552,7 @@ speaker NARRATOR
 say ...
 
 img cooler_4
-say_nothing
+say ...
 
 img cooler_6
 speaker Nathaniel
@@ -778,13 +778,15 @@ img thanks_5
 say ...
 
 img thanks_8
-say Well, in way, we both got to talk about our own worries.
+say Well, in a way, we both got to talk about our own worries.
 
 say We are the same person, after all.
 
 img thanks_9
 speaker Nathaniel
 say Right...
+
+say ...
 
 say ...
 

@@ -80,7 +80,8 @@ let bp_awkward, bp_fourfold, bp_cooler;
 //  -- Height given is the height of any image in said folder, plus 150px for space for the textbox
 let c_width = 806;
 let im_height = 605;
-let c_height = im_height + 150;
+let tbox_height = 100;
+let c_height = im_height + tbox_height;
 
 function setup() {
   createCanvas(c_width, c_height);
@@ -88,7 +89,7 @@ function setup() {
   textFont('Courier New');
 
   // Initialize the scene
-  scene = new VN_Scene('cool and new scene', 1, 1, c_width - 2, c_height - 2, 10, 150);
+  scene = new VN_Scene('cool and new scene', 1, 1, c_width - 2, c_height - 2, 10, tbox_height);
 
   // Add the images we just loaded in
   for (let i = 0; i < awkward.length; i++) {
