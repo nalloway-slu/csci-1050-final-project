@@ -238,7 +238,7 @@ if f_fourfold 2 goto 280
 
 
 # Option 1: With Guattari
-say ... with Guattari’s functors for subjectivity.
+say ... with Guattari’s subjectivity fourfold.
 
 img fourfold_6
 say You've got like, four different functors, each mapping out a different part of how one's identity can start to change.
@@ -251,7 +251,7 @@ say And then U, for universes of value. So think like, I dunno, integrity or pat
 
 img fourfold_7
 speaker Natalia
-say I know patience is something we both wish we had.
+say I know patience is something we both wish we had more of.
 
 speaker Nathaniel
 say Agreed.
@@ -329,7 +329,7 @@ say Yeah, but I think that stuff’s kinda important.
 
 img fourfold_9
 speaker Natalia
-say Well, it’s like what you said with Poli-Sci earlier... You “grappled with it“ ’cus you found it important, and now you continue to “grapple with“ this stuff as you keep on learning.
+say Well, it’s like what you said with Poli-Sci earlier... You “grappled with it“ because you found it important, and now you continue to “grapple with“ this stuff as you keep on learning.
 
 speaker Nathaniel
 say Right, yeah...
@@ -371,7 +371,7 @@ say Oh?
 
 
 # If `weird` was the option picked at the start...
-if f_awkward 2 goto 380
+if f_awkward 3 goto 380
 
 # Else...
 goto 420
@@ -724,7 +724,7 @@ say Yeah, maybe you’re right.
 
 img thanks_0
 speaker NARRATOR
-...
+say ...
 
 img thanks_1
 say_nothing
@@ -745,7 +745,7 @@ say Yeah. All it takes is some practice.
 
 img thanks_6
 speaker Natalia
-And a bit of self-kindness.
+say And a bit of self-kindness.
 
 speaker NARRATOR
 say ...
@@ -788,6 +788,8 @@ say Right...
 
 say ...
 
+say Or at least I wish we were.
+
 img thanks_10
 speaker NARRATOR
 say_nothing
@@ -797,3 +799,5 @@ pause
 
 img thanks_12
 pause
+
+clear
