@@ -135,7 +135,8 @@ function VN_Button_Panel (name, clr = 'CYAN') {
 //-------------------------------------------------------------------------------------------------------------------------------------------------
 
 // Define a scene constructor
-//  -- For legibility, properties and methods related to parser functionality are offloaded to file `vn_parser.js`
+//  -- For modularization, properties/methods related to parser functionality are offloaded to file `vn_parser.js`
+//     and properties/methods related to handling user interaction are offloaded to file `vn_handler.js`
 function VN_Scene (name, x, y, w, h, p, tb_h) {
   this.name = name;       // For debugging purposes, so as to report to console which scene broke
   
@@ -268,9 +269,7 @@ function VN_Scene (name, x, y, w, h, p, tb_h) {
     }
 
     // Draw the textbox
-    fill(235);
-    // TO CONSIDER: Use opacity instead of off-white
-    // fill(255, 255, 255, 220);
+    fill(235); // TO CONSIDER: Change the textbox color?
     stroke(255);
     strokeWeight(4);
 
@@ -283,6 +282,9 @@ function VN_Scene (name, x, y, w, h, p, tb_h) {
 
     // Display text characters of the dialogue incrementally
     let dg_text;
+
+    // TO DO: Add audio functionality
+
     // Decrease the dialogue-output-counter every frame that we call the .display() method
     if (this.dg_char_counter > 0) {
       this.dg_char_counter -= this.dg_char_speed;
@@ -324,11 +326,4 @@ function VN_Scene (name, x, y, w, h, p, tb_h) {
 
     pop();
   };
-
-  // TO DO: Figure out if i should assign button panels to scenes or if they should be independent
-  //        Add audio functionality
-  //        Add a way of distinguish text by speaking vs thinking vs onomatopoeia
-  //        Figure out how to hook in ways to control the back-background behind the VN_Scene -- maybe put in the parser as a separate component?
-  //        Perhaps refactor the whole speaker thing into a L-R vs. face-viewer mode
-  //        Have a way to output prior dialog to a history box somewhere?
 }

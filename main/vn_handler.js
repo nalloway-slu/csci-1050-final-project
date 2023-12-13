@@ -6,19 +6,27 @@ vn_handler.js - TO DO: Documentation
 end documentation
 ****************/
 
-// TO DO: Extract out option-sequence globals and put them as object properties
-
 // TO DO: Write comment
 VN_Scene.prototype.current_inst_index = 0;
 
 // TO DO: Write comment
+VN_Scene.prototype.get_current_inst_index = function () {
+  return this.current_inst_index;
+}
+
+// TO DO: Write comment
 VN_Scene.prototype.handle_interaction = function () {
+  // Don't do anything if we've run out of lines in the instruction set
+  if (this.current_inst_index >= this.inst_length) {
+    return;
+  }
+
   // Don't do anything if the scene's still printing the dialogue to the screen
   if (this.dialogue_not_finished()) {
     return;
   }
 
-  // Logic for when displaying options to the user.
+  // Logic for when displaying dialogue options to the user
   // If we are displaying options to the user....
   if (this.is_displaying_options) {
 
@@ -47,9 +55,8 @@ VN_Scene.prototype.handle_interaction = function () {
   while (true) {
     tmp = this.execute_instruction(VN_Line_Counter);
     this.current_inst_index++;
-    // VN_Line_Counter %= this.inst_length;
 
-    // We've hit an `options` command, so we'll set up a button panel here
+    // We've hit an `options` command, so we'll set up a dialogue choice here
     if (typeof tmp == 'object') {
       if ('target_flag' in tmp) {
         this.is_displaying_options = true;

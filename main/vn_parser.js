@@ -91,7 +91,7 @@ VN_Scene.prototype.execute_instruction = function (index) {
     switch (first_word) {
       case 'say_nothing':
         this.set_dialogue('');
-        break;
+        return 'say';
       case 'clear':
         this.clear();
         break;
