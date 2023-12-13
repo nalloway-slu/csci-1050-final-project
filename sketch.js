@@ -1,10 +1,21 @@
 /****************
 Final Project. 2023-12-13
-[TITLE PENDING]
+A CONVERSATION IN MADRID
 Nathaniel Alloway, CSCI 1050-01
 
-TO DO: Credits
-TO DO: Description
+Description: This is the code for a virtual novel (hereafter VN) in which I have a
+  fictitious conversation with another person whilst on a walk through
+  Dehesa de la Villa Park in Madrid. The folder `main` contains code for a
+  VN-creation framework, which may be adapted and expanded upon in future projects.
+  The `assets` folder contains assets particular to this specific VN.
+
+Credits: Images and dialogue are wholly my own, excepting the quotation "ever-living forces",
+  which is due to my intro philosophy professor Carlos Segovia. The discussion on Guattari's
+  subjectivity diagram is also due to Carlos Segovia. The discussion on Heidegger's "dwelling"
+  fourfold is (yet again) in part due to Carlos Segovia, but most of it draws from a thread on
+  the 'ma pona pi toki pona' Discord server created by @aardvark0825. The thread may be found at
+  the given link:
+    https://discord.com/channels/301377942062366741/1174566951553613834/1174570004079976468
 
 File directory:
   index.html      - Where all the HTML happens
@@ -15,7 +26,10 @@ File directory:
   | vn_parser.js  - Defines how to interpret text files in `assets` folder containing VN scene dialogs and instructions
   | vn_handler.js - Handles execution of instructions as parsed in `vn_parser.js` upon user input
   assets
-  | 
+  | awkward_0.png
+  |  ...
+  | thanks_12.png - Images displayed in the VN
+  | dialogue.txt  - Instruction set for the VN
 ****************/
 
 let lines;
