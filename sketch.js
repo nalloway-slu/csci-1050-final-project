@@ -150,7 +150,7 @@ function setup() {
   lines.splice(0, 0, ''); // Prepend an empty string since text files are one-indexed in my editor instead of zero-indexed.
   scene.assign_instruction_set(lines);
 
-  scene.set_current_inst_index(351); // For debugging: Jump to first choice - 51 / second choice - 226 / third choice - 351
+  // scene.set_current_inst_index(351); // For debugging: Jump to first choice - 51 / second choice - 226 / third choice - 351
 
 }
 
