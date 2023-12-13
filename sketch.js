@@ -154,7 +154,6 @@ function setup() {
   scene.assign_instruction_set(lines);
 
   //  scene.set_current_inst_index(226); // For debugging: Jump to first choice - 51 / second choice - 226 / third choice - 351
-
 }
 
 function draw() {
@@ -172,5 +171,17 @@ function mousePressed() {
   let mouse_inside_canvas_y = (mouseY >= 0) && (mouseY < c_height);
   if (mouse_inside_canvas_x && mouse_inside_canvas_y) {
     scene.handle_interaction();
+  }
+}
+
+function keyPressed() {
+  // Don't do anything if we've run out of instructions
+  if (scene.check_if_reached_end_of_instruction_set()) {
+    return;
+  }
+
+  // Else, handle interaction if right arrow key
+  if (keyCode == RIGHT_ARROW) {
+    scene._handle_interaction();
   }
 }
