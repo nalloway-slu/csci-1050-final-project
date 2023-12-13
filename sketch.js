@@ -182,6 +182,6 @@ function keyPressed() {
 
   // Else, handle interaction if right arrow key
   if (keyCode == RIGHT_ARROW) {
-    scene._handle_interaction();
+    scene.handle_interaction();
   }
 }
