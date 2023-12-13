@@ -14,7 +14,6 @@ File directory:
   | vn_objects.js - Defines object constructors for characters, buttons, and scenes that are used for the VN
   | vn_parser.js  - Defines how to interpret text files in `assets` folder containing VN scene dialogs and instructions
   | vn_handler.js - TO DO: Write description
-  | vn_globals.js - Stores variables used by other VN objects in a shared, global location
   assets
   | 
 ****************/
