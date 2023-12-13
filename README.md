@@ -46,6 +46,6 @@ subjectivity diagram is also due to Carlos Segovia. The discussion on Heidegger'
 fourfold is (yet again) in part due to Carlos Segovia, but some of it also draws from a thread on
 the 'ma pona pi toki pona' Discord server created by @aardvark0825. The thread may be found at
 the given link:\
-  https://discord.com/channels/301377942062366741/1174566951553613834/1174570004079976468
+  https://discord.com/channels/301377942062366741/1174566951553613834/1174570004079976468 \
 The code for centering the p5 canvas was taken from this link:\
   https://github.com/processing/p5.js/wiki/Positioning-your-canvas#centering-the-sketch-on-the-page-with-css
